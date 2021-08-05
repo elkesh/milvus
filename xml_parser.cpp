@@ -5,45 +5,122 @@
 using namespace tinyxml2;
 using namespace std;
 
-void generateWall(int rectangle[4]){
+struct basic_model{
 
-    std::string x1=std::to_string(rectangle[0]);
-    std::string y1=std::to_string(rectangle[1]);
-    std::string x2=std::to_string(rectangle[2]);
-    std::string y2=std::to_string(rectangle[3]);
+    string x;
+    string y;
+    string x_size;
+    string y_size;
+    string height;
+
+};
+const char* caster(string a){
+
+    return a.c_str();
+
+}
+
+void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
+
+    int x1=rectangle[(number-1)][0];
+    int y1=rectangle[(number-1)][1];
+    int x2=rectangle[(number-1)][2];
+    int y2=rectangle[(number-1)][3];
+
+    basic_model wall;
+    wall.x=to_string((x2+x1)/2);
+    wall.y=to_string((y2+y1)/2);
+    wall.x_size=to_string((x2-x1));
+    wall.y_size=to_string((y2-y1));
+    wall.height=to_string(3);
+
+    string wall_number=to_string(number);   
+
     
 
-    XMLElement *pElement = xmlDoc.NewElement("pose");
-    pElement->SetAttribute("frame","");
-    pElement->SetText(x1+" "+y1+" 0 0 0 0");
-    pRoot->InsertEndChild(pElement);
+    XMLElement *pElement =doc.NewElement("link");
+    pElement->SetAttribute("name",caster("wall"+wall_number));
+    root->InsertEndChild(pElement);
 
-    pElement=xmlDoc.NewElement("link");
-    pElement->SetAttribute("name","wall2");
-    pRoot->InsertEndChild(pElement);
-
-    XMLElement *pElement2=xmlDoc.NewElement("collision");
-    pElement2->SetAttribute("name","wall2_collision");
+    XMLElement *pElement2=doc.NewElement("collision");
+    pElement2->SetAttribute("name",caster("wall"+wall_number+"_collision"));
     pElement->InsertEndChild(pElement2);
 
-    XMLElement *pElement3=xmlDoc.NewElement("geometry");
+    XMLElement *pElement3=doc.NewElement("geometry");
     pElement2->InsertEndChild(pElement3);
 
-    XMLElement *pElement4=xmlDoc.NewElement("box");
+    XMLElement *pElement4=doc.NewElement("box");
     pElement3->InsertEndChild(pElement4);
 
-    XMLElement *pElement5=xmlDoc.NewElement("size");
-    pElement5->SetText("5.25 0.15 2.5");
+    XMLElement *pElement5=doc.NewElement("size");
+    pElement5->SetText(caster(wall.x_size+" "+wall.y_size+" "+wall.height));
     pElement4->InsertEndChild(pElement5);
 
-    pElement3=xmlDoc.NewElement("pose");
+    pElement3=doc.NewElement("pose");
     pElement3->SetAttribute("frame","");
+    pElement3->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement2->InsertEndChild(pElement3);
+
+    pElement2=doc.NewElement("visual");
+    pElement2->SetAttribute("name",caster("Wall_"+wall_number+"_Visual"));
+    pElement->InsertEndChild(pElement2);
+
+    pElement3=doc.NewElement("pose");
+    pElement3->SetAttribute("frame","");
+    pElement3->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement2->InsertEndChild(pElement3);
+
+    pElement3=doc.NewElement("geometry");
+    pElement2->InsertEndChild(pElement3);
+
+    pElement4=doc.NewElement("box");
+    pElement3->InsertEndChild(pElement4);
+
+    pElement5=doc.NewElement("size");
+    pElement5->SetText(caster(wall.x_size+" "+wall.y_size+" "+wall.height));
+    pElement4->InsertEndChild(pElement5);
+
+    pElement3=doc.NewElement("material");
+    pElement2->InsertEndChild(pElement3);
+
+    pElement4=doc.NewElement("script");
+    pElement3->InsertEndChild(pElement4);
+
+    pElement5=doc.NewElement("uri");
+    pElement5->SetText("file://media/materials/scripts/gazebo.material");
+    pElement4->InsertEndChild(pElement5);
+
+    pElement5=doc.NewElement("name");
+    pElement5->SetText("Gazebo/Grey");
+    pElement4->InsertEndChild(pElement5);
+
+    pElement4=doc.NewElement("ambient");
+    pElement4->SetText("1 1 1 1");
+    pElement3->InsertEndChild(pElement4);
+
+    pElement3=doc.NewElement("meta");
+    pElement2->InsertEndChild(pElement3);
+
+    pElement4=doc.NewElement("layer");
+    pElement4->SetText("0");
+    pElement3->InsertEndChild(pElement4);
+
+    pElement2=doc.NewElement("pose");
+    pElement2->SetAttribute("frame","");
+    pElement2->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement->InsertEndChild(pElement2);
+
+    pElement=doc.NewElement("static");
+    pElement->SetText("1");
+    root->InsertEndChild(pElement);
+
 
 
 }
 
-void parser_func(int *rectangles)
+void parser_func(int** rectangles)
 {   
+    //int rectangles[2][4]={{13,47,86,56},{55,83,71,93}};
     XMLDocument xmlDoc;
     
     XMLDeclaration* declaration=xmlDoc.NewDeclaration();
@@ -58,11 +135,17 @@ void parser_func(int *rectangles)
     pRoot->SetAttribute("name","uras");
     sdfversion->InsertEndChild(pRoot);
 
-    int index=0;
+    XMLElement *pFrame=xmlDoc.NewElement("pose");
+    pFrame->SetAttribute("frame","");
+    pFrame->SetText("0 0 0 0 0 0");
+    pRoot->InsertEndChild(pFrame);
 
-    while(*rectangles[index][0]!=-123){
+    int index=1;
 
-        generateWall(rectangles[index]);
+    while(rectangles[index][0]!=-123){
+
+        generateWall(rectangles,xmlDoc,index+1,pRoot);
+        index++;
 
     }
 
@@ -76,4 +159,3 @@ void parser_func(int *rectangles)
 
 
 }
-

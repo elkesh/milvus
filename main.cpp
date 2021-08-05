@@ -13,14 +13,13 @@ int main(){
     threshold(image,binary_image,100,255,CV_THRESH_BINARY);
 
 
-    int *a=generate_borders(binary_image);
+    int **ptr_to_rect=generate_borders(binary_image);
+    
+    parser_func(ptr_to_rect);
 
-    parser_func(a);
 
 
-
-    imshow("Image",image);
-    waitKey(0);
+    
     
     
     return 0;

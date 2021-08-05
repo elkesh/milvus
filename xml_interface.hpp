@@ -1,2 +1,2 @@
 
-void parser_func();
+void parser_func(int** rectangles);
