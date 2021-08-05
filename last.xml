@@ -6,7 +6,7 @@
             <collision name="wall2_collision">
                 <geometry>
                     <box>
-                        <size>447 4 3</size>
+                        <size>447 0 3</size>
                     </box>
                 </geometry>
                 <pose frame="">281 50 0 0 0 0</pose>
@@ -15,7 +15,7 @@
                 <pose frame="">281 50 0 0 0 0</pose>
                 <geometry>
                     <box>
-                        <size>447 4 3</size>
+                        <size>447 0 3</size>
                     </box>
                 </geometry>
                 <material>
@@ -29,9 +29,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">281 50 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall3">
             <collision name="wall3_collision">
                 <geometry>
@@ -39,10 +38,10 @@
                         <size>448 66 3</size>
                     </box>
                 </geometry>
-                <pose frame="">0 0 0 0 0 0</pose>
+                <pose frame="">281 85 0 0 0 0</pose>
             </collision>
             <visual name="Wall_3_Visual">
-                <pose frame="">0 0 0 0 0 0</pose>
+                <pose frame="">281 85 0 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>448 66 3</size>
@@ -51,7 +50,7 @@
                 <material>
                     <script>
                         <uri>file://media/materials/scripts/gazebo.material</uri>
-                        <name>Gazebo/Red</name>
+                        <name>Gazebo/Grey</name>
                     </script>
                     <ambient>1 1 1 1</ambient>
                 </material>
@@ -59,9 +58,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">281 85 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall4">
             <collision name="wall4_collision">
                 <geometry>
@@ -89,9 +87,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">115 186 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall5">
             <collision name="wall5_collision">
                 <geometry>
@@ -119,9 +116,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">550 204 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall6">
             <collision name="wall6_collision">
                 <geometry>
@@ -149,9 +145,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">337 285 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall7">
             <collision name="wall7_collision">
                 <geometry>
@@ -179,9 +174,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">115 336 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall8">
             <collision name="wall8_collision">
                 <geometry>
@@ -209,9 +203,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">261 371 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall9">
             <collision name="wall9_collision">
                 <geometry>
@@ -239,9 +232,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">386 454 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall10">
             <collision name="wall10_collision">
                 <geometry>
@@ -269,9 +261,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">261 488 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall11">
             <collision name="wall11_collision">
                 <geometry>
@@ -299,9 +290,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">504 506 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall12">
             <collision name="wall12_collision">
                 <geometry>
@@ -329,9 +319,8 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">601 549 0 0 0 0</pose>
         </link>
-        <static>1</static>
         <link name="wall13">
             <collision name="wall13_collision">
                 <geometry>
@@ -359,8 +348,7 @@
                     <layer>0</layer>
                 </meta>
             </visual>
-            <pose frame="">0 0 0 0 0 0</pose>
+            <pose frame="">504 575 0 0 0 0</pose>
         </link>
-        <static>1</static>
     </model>
 </sdf>

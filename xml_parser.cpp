@@ -27,6 +27,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
     int x2=rectangle[(number-1)][2];
     int y2=rectangle[(number-1)][3];
 
+    
     basic_model wall;
     wall.x=to_string((x2+x1)/2);
     wall.y=to_string((y2+y1)/2);
@@ -36,6 +37,8 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
 
     string wall_number=to_string(number);   
 
+    if(y1==y2)
+        wall.y_size=to_string(4);
     
 
     XMLElement *pElement =doc.NewElement("link");
@@ -107,13 +110,13 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
 
     pElement2=doc.NewElement("pose");
     pElement2->SetAttribute("frame","");
-    pElement2->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement2->SetText(caster("0 0 0 0 0 0"));
     pElement->InsertEndChild(pElement2);
-
+    
     pElement=doc.NewElement("static");
     pElement->SetText("1");
     root->InsertEndChild(pElement);
-
+    
 
 
 }
@@ -132,7 +135,7 @@ void parser_func(int** rectangles)
     xmlDoc.InsertEndChild(sdfversion);
 
     XMLElement *pRoot=xmlDoc.NewElement("model");
-    pRoot->SetAttribute("name","uras");
+    pRoot->SetAttribute("name","new_model");
     sdfversion->InsertEndChild(pRoot);
 
     XMLElement *pFrame=xmlDoc.NewElement("pose");
@@ -151,7 +154,7 @@ void parser_func(int** rectangles)
 
     
 
-    XMLError eResult = xmlDoc.SaveFile("last.xml");
+    XMLError eResult = xmlDoc.SaveFile("new_model/model.sdf");
 
 
 
