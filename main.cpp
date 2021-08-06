@@ -16,6 +16,7 @@ int main(){
     threshold(image,binary_image,100,255,CV_THRESH_BINARY);
 
     double scale;
+    cout<<"Enter the scale between the image and simulation world scale(meter per pixel)"<<endl;
     cin>>scale;
 
     int **ptr_to_rect=generate_borders(binary_image);
