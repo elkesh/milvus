@@ -49,7 +49,9 @@ int** generate_borders(cv::Mat image){
                     }
                      
                
-                }     
+                } 
+
+
 
             }
 
@@ -62,20 +64,17 @@ int** generate_borders(cv::Mat image){
 
                 
                 
-                if(rectangles[k][3]==(i-1)){                    
-                    if(rectangles[k][0]==last_row[j][0] && rectangles[k][2]==last_row[j][1]){
-                        rectangles[k][3]++;
-                    
-                    }
+                if(rectangles[k][3]==(i-1) && rectangles[k][0]==last_row[j][0] && rectangles[k][2]==last_row[j][1]){                    
+                    rectangles[k][3]++;
+                    break;                    
                 }else if(k==rectangle_index){
                     
-                    rectangle_index++;
-                    rectangles[rectangle_index]=new int[4];
                     rectangles[rectangle_index][0]=last_row[j][0];
                     rectangles[rectangle_index][1]=i;
                     rectangles[rectangle_index][2]=last_row[j][1];
                     rectangles[rectangle_index][3]=i;
-                    
+                    rectangle_index++;
+                    rectangles[rectangle_index]=new int[4];
                     break;
                 }                                     
 
@@ -83,13 +82,20 @@ int** generate_borders(cv::Mat image){
              
 
         }
+
+        
+
+        
     
         last_row_index=0;
 
         
     }
-    cout<<rectangle_index<<endl;
-    for(i=1;i<=rectangle_index;i++){
+
+    delete rectangles[rectangle_index];
+    rectangle_index--;
+    
+    for(i=0;i<=rectangle_index;i++){
 
         cout<<i<<endl;
         cout<<"x1:"<<rectangles[i][0]<<endl;
@@ -105,23 +111,18 @@ int** generate_borders(cv::Mat image){
         Point pt1(x1,y1);
         Point pt2(x2,y2);
 
-        rectangle(image,pt1,pt2,cv::Scalar(0,255,0),1);
+        //rectangle(image,pt1,pt2,cv::Scalar(0,255,0),1);
 
     }
 
-    string winname = "Test";
-    namedWindow(winname);     
-    moveWindow(winname, 40,30); 
-    imshow(winname, image);
-    waitKey();
-    destroyAllWindows();
+    imwrite("result.jpg",image);
     
-
+    
     rectangles[rectangle_index+1]=new int[4];
     rectangles[rectangle_index+1][0]=-123;
 
     
-
+    
    
     return rectangles;
 

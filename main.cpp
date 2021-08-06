@@ -7,15 +7,20 @@ using namespace std;
 using namespace cv;
 int main(){
 
+    
+
+
     cv::Mat image;
     cv::Mat binary_image;
     image = cv::imread("deneme.jpg");
     threshold(image,binary_image,100,255,CV_THRESH_BINARY);
 
+    double scale;
+    cin>>scale;
 
     int **ptr_to_rect=generate_borders(binary_image);
     
-    parser_func(ptr_to_rect);
+    parser_func(ptr_to_rect,scale);
 
 
 

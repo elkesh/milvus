@@ -9,6 +9,7 @@ struct basic_model{
 
     string x;
     string y;
+    string z;
     string x_size;
     string y_size;
     string height;
@@ -20,25 +21,25 @@ const char* caster(string a){
 
 }
 
-void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
+void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,double scale){
 
-    int x1=rectangle[(number-1)][0];
-    int y1=rectangle[(number-1)][1];
-    int x2=rectangle[(number-1)][2];
-    int y2=rectangle[(number-1)][3];
+    double x1=rectangle[(number-1)][0];
+    double y1=rectangle[(number-1)][1];
+    double x2=rectangle[(number-1)][2];
+    double y2=rectangle[(number-1)][3];
 
     
     basic_model wall;
-    wall.x=to_string((x2+x1)/2);
-    wall.y=to_string((y2+y1)/2);
-    wall.x_size=to_string((x2-x1));
-    wall.y_size=to_string((y2-y1));
-    wall.height=to_string(3);
+    wall.x=to_string((x2+x1)/2*scale);
+    wall.y=to_string((y2+y1)/2*scale);
+    wall.x_size=to_string(((x2-x1+1)+0.125)*scale);//0.125ler
+    wall.y_size=to_string(((y2-y1+1)+0.125)*scale);//çözülecek
+    wall.height=to_string(15*scale);
+    wall.z=to_string(15.0/2.0*scale);
 
     string wall_number=to_string(number);   
 
-    if(y1==y2)
-        wall.y_size=to_string(4);
+    
     
 
     XMLElement *pElement =doc.NewElement("link");
@@ -61,7 +62,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
 
     pElement3=doc.NewElement("pose");
     pElement3->SetAttribute("frame","");
-    pElement3->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement3->SetText(caster(wall.x+" "+wall.y+" "+wall.z+"0 0 0"));
     pElement2->InsertEndChild(pElement3);
 
     pElement2=doc.NewElement("visual");
@@ -70,7 +71,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
 
     pElement3=doc.NewElement("pose");
     pElement3->SetAttribute("frame","");
-    pElement3->SetText(caster(wall.x+" "+wall.y+" 0 0 0 0"));
+    pElement3->SetText(caster(wall.x+" "+wall.y+" "+wall.z+"0 0 0"));
     pElement2->InsertEndChild(pElement3);
 
     pElement3=doc.NewElement("geometry");
@@ -121,7 +122,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root){
 
 }
 
-void parser_func(int** rectangles)
+void parser_func(int** rectangles,double scale)
 {   
     //int rectangles[2][4]={{13,47,86,56},{55,83,71,93}};
     XMLDocument xmlDoc;
@@ -143,11 +144,11 @@ void parser_func(int** rectangles)
     pFrame->SetText("0 0 0 0 0 0");
     pRoot->InsertEndChild(pFrame);
 
-    int index=1;
+    int index=0;
 
     while(rectangles[index][0]!=-123){
 
-        generateWall(rectangles,xmlDoc,index+1,pRoot);
+        generateWall(rectangles,xmlDoc,index+1,pRoot,scale);
         index++;
 
     }
