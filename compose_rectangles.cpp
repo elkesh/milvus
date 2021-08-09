@@ -111,7 +111,7 @@ int** generate_borders(cv::Mat image){
         Point pt1(x1,y1);
         Point pt2(x2,y2);
 
-        //rectangle(image,pt1,pt2,cv::Scalar(0,255,0),1);
+        rectangle(image,pt1,pt2,cv::Scalar(0,255,0),1);
 
     }
 
