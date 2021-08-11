@@ -9,10 +9,10 @@
                         <size>2.956250 0.706250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">25.200000 1.225000 0.3750000 0 0</pose>
+                <pose frame="">25.200000 1.225000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_1_Visual">
-                <pose frame="">25.200000 1.225000 0.3750000 0 0</pose>
+                <pose frame="">25.200000 1.225000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>2.956250 0.706250 0.750000</size>
@@ -39,10 +39,10 @@
                         <size>12.706250 1.906250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">30.075000 2.525000 0.3750000 0 0</pose>
+                <pose frame="">30.075000 2.525000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_2_Visual">
-                <pose frame="">30.075000 2.525000 0.3750000 0 0</pose>
+                <pose frame="">30.075000 2.525000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>12.706250 1.906250 0.750000</size>
@@ -69,10 +69,10 @@
                         <size>2.956250 2.356250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">25.200000 4.650000 0.3750000 0 0</pose>
+                <pose frame="">25.200000 4.650000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_3_Visual">
-                <pose frame="">25.200000 4.650000 0.3750000 0 0</pose>
+                <pose frame="">25.200000 4.650000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>2.956250 2.356250 0.750000</size>
@@ -99,10 +99,10 @@
                         <size>3.056250 0.506250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">13.050000 5.575000 0.3750000 0 0</pose>
+                <pose frame="">13.050000 5.575000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_4_Visual">
-                <pose frame="">13.050000 5.575000 0.3750000 0 0</pose>
+                <pose frame="">13.050000 5.575000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>3.056250 0.506250 0.750000</size>
@@ -129,10 +129,10 @@
                         <size>15.606250 2.856250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">19.325000 7.250000 0.3750000 0 0</pose>
+                <pose frame="">19.325000 7.250000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_5_Visual">
-                <pose frame="">19.325000 7.250000 0.3750000 0 0</pose>
+                <pose frame="">19.325000 7.250000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>15.606250 2.856250 0.750000</size>
@@ -159,10 +159,10 @@
                         <size>3.056250 5.456250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">13.050000 11.400000 0.3750000 0 0</pose>
+                <pose frame="">13.050000 11.400000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_6_Visual">
-                <pose frame="">13.050000 11.400000 0.3750000 0 0</pose>
+                <pose frame="">13.050000 11.400000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>3.056250 5.456250 0.750000</size>
@@ -189,10 +189,10 @@
                         <size>3.606250 1.906250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">5.775000 13.175000 0.3750000 0 0</pose>
+                <pose frame="">5.775000 13.175000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_7_Visual">
-                <pose frame="">5.775000 13.175000 0.3750000 0 0</pose>
+                <pose frame="">5.775000 13.175000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>3.606250 1.906250 0.750000</size>
@@ -219,10 +219,10 @@
                         <size>25.756250 3.156250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">16.850000 15.700000 0.3750000 0 0</pose>
+                <pose frame="">16.850000 15.700000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_8_Visual">
-                <pose frame="">16.850000 15.700000 0.3750000 0 0</pose>
+                <pose frame="">16.850000 15.700000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>25.756250 3.156250 0.750000</size>
@@ -249,10 +249,10 @@
                         <size>3.606250 6.756250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">5.775000 20.650000 0.3750000 0 0</pose>
+                <pose frame="">5.775000 20.650000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_9_Visual">
-                <pose frame="">5.775000 20.650000 0.3750000 0 0</pose>
+                <pose frame="">5.775000 20.650000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>3.606250 6.756250 0.750000</size>
@@ -279,10 +279,10 @@
                         <size>1.256250 4.906250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">27.500000 19.725000 0.3750000 0 0</pose>
+                <pose frame="">27.500000 19.725000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_10_Visual">
-                <pose frame="">27.500000 19.725000 0.3750000 0 0</pose>
+                <pose frame="">27.500000 19.725000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>1.256250 4.906250 0.750000</size>
@@ -309,10 +309,10 @@
                         <size>22.456250 3.406250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">14.050000 25.725000 0.3750000 0 0</pose>
+                <pose frame="">14.050000 25.725000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_11_Visual">
-                <pose frame="">14.050000 25.725000 0.3750000 0 0</pose>
+                <pose frame="">14.050000 25.725000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>22.456250 3.406250 0.750000</size>
@@ -339,10 +339,10 @@
                         <size>22.406250 0.056250 0.750000</size>
                     </box>
                 </geometry>
-                <pose frame="">14.075000 27.450000 0.3750000 0 0</pose>
+                <pose frame="">14.075000 27.450000 0.375000 0 0 0</pose>
             </collision>
             <visual name="Wall_12_Visual">
-                <pose frame="">14.075000 27.450000 0.3750000 0 0</pose>
+                <pose frame="">14.075000 27.450000 0.375000 0 0 0</pose>
                 <geometry>
                     <box>
                         <size>22.406250 0.056250 0.750000</size>

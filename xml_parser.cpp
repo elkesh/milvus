@@ -1,6 +1,9 @@
 #include <iostream>
 #include "xml_interface.hpp"
 #include "tinyxml2.h"
+#include "map_generator.hpp"
+#include "model_interface.hpp"
+
 
 using namespace tinyxml2;
 
@@ -21,7 +24,7 @@ const char* caster(string a){
 
 }
 
-void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,double scale){
+void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,double scale,cv::Mat &image){
 
     double x1=rectangle[(number-1)][0];
     double y1=rectangle[(number-1)][1];
@@ -29,13 +32,20 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
     double y2=rectangle[(number-1)][3];
 
     
-    basic_model wall;
-    wall.x=to_string((x2+x1)/2*scale);
-    wall.y=to_string((y2+y1)/2*scale);
-    wall.x_size=to_string(((x2-x1+1)+0.125)*scale);//0.125ler
-    wall.y_size=to_string(((y2-y1+1)+0.125)*scale);//çözülecek
-    wall.height=to_string(15*scale);
-    wall.z=to_string(15.0/2.0*scale);
+    Box wall;
+    wall.pose.x=to_string((x2+x1)/2*scale);
+    wall.pose.y=to_string((y2+y1)/2*scale);
+    wall.pose.z=to_string(15.0/2.0*scale);
+    wall.size.x_size=to_string(((x2-x1+1)+0.125)*scale);//0.125ler
+    wall.size.y_size=to_string(((y2-y1+1)+0.125)*scale);//çözülecek
+    wall.size.z_size=to_string(15*scale);
+
+    wall.put_map(image);
+
+
+
+
+    
 
     string wall_number=to_string(number);   
 
@@ -57,12 +67,12 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
     pElement3->InsertEndChild(pElement4);
 
     XMLElement *pElement5=doc.NewElement("size");
-    pElement5->SetText(caster(wall.x_size+" "+wall.y_size+" "+wall.height));
+    pElement5->SetText(caster(wall.size.x_size+" "+wall.size.y_size+" "+wall.size.z_size));
     pElement4->InsertEndChild(pElement5);
 
     pElement3=doc.NewElement("pose");
     pElement3->SetAttribute("frame","");
-    pElement3->SetText(caster(wall.x+" "+wall.y+" "+wall.z+"0 0 0"));
+    pElement3->SetText(caster(wall.pose.x+" "+wall.pose.y+" "+wall.pose.z+" 0 0 0"));
     pElement2->InsertEndChild(pElement3);
 
     pElement2=doc.NewElement("visual");
@@ -71,7 +81,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
 
     pElement3=doc.NewElement("pose");
     pElement3->SetAttribute("frame","");
-    pElement3->SetText(caster(wall.x+" "+wall.y+" "+wall.z+"0 0 0"));
+    pElement3->SetText(caster(wall.pose.x+" "+wall.pose.y+" "+wall.pose.z+" 0 0 0"));
     pElement2->InsertEndChild(pElement3);
 
     pElement3=doc.NewElement("geometry");
@@ -81,7 +91,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
     pElement3->InsertEndChild(pElement4);
 
     pElement5=doc.NewElement("size");
-    pElement5->SetText(caster(wall.x_size+" "+wall.y_size+" "+wall.height));
+    pElement5->SetText(caster(wall.size.x_size+" "+wall.size.y_size+" "+wall.size.z_size));
     pElement4->InsertEndChild(pElement5);
 
     pElement3=doc.NewElement("material");
@@ -122,7 +132,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
 
 }
 
-void parser_func(int** rectangles,double scale)
+void parser_func(int** rectangles,double scale,cv::Mat &image)
 {   
     //int rectangles[2][4]={{13,47,86,56},{55,83,71,93}};
     XMLDocument xmlDoc;
@@ -143,12 +153,11 @@ void parser_func(int** rectangles,double scale)
     pFrame->SetAttribute("frame","");
     pFrame->SetText("0 0 0 0 0 0");
     pRoot->InsertEndChild(pFrame);
-
-    int index=0;
+int index=0;
 
     while(rectangles[index][0]!=-123){
 
-        generateWall(rectangles,xmlDoc,index+1,pRoot,scale);
+        generateWall(rectangles,xmlDoc,index+1,pRoot,scale,image);
         index++;
 
     }
@@ -156,6 +165,8 @@ void parser_func(int** rectangles,double scale)
     
 
     XMLError eResult = xmlDoc.SaveFile("new_model/model.sdf");
+
+    generate_map();
 
 
 

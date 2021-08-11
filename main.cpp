@@ -27,12 +27,13 @@ int main(){
 
     int **ptr_to_rect=generate_borders(binary_image);
     
-    parser_func(ptr_to_rect,scale);
+    parser_func(ptr_to_rect,scale,image);
 
     generator((double)rows, (double)cols,scale);
 
 
-
+    imwrite("result.jpg",image);
+    
     
     
     

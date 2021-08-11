@@ -80,19 +80,13 @@ void generator(double rows, double colms,double scale){
 			getline(cin,pose);
 			
 			cout<<"uras"<<endl;
-			/*
-			int index=0;
-			while(index<11){
-				cout<<disected_pose[index];
-				pose=pose+disected_pose[index];
-				index++;
-
-			}*/
-
+			
 			add_model(xmlDoc,model,pWorld,pose);
 
 
 		}
+
+		
 
 	}
 
