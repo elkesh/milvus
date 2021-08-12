@@ -9,7 +9,7 @@ using namespace cv;
 int main(){
 
     
-
+    
 
     cv::Mat image;
     cv::Mat binary_image;
@@ -31,7 +31,7 @@ int main(){
 
     generator((double)rows, (double)cols,scale);
 
-
+    flip(image,image,0);
     imwrite("result.jpg",image);
     
     

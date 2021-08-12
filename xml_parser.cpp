@@ -40,7 +40,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
     wall.size.y_size=to_string(((y2-y1+1)+0.125)*scale);//çözülecek
     wall.size.z_size=to_string(15*scale);
 
-    wall.put_map(image);
+    wall.put_map(image,scale);
 
 
 
