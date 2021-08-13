@@ -15,8 +15,8 @@
 		x_size(x),y_size(y),z_size(z){}
 
 	
-	Box::Box(string x="0",string y="0",string z="0",string pitch="0",
-		string yaw="0",string roll="0",string x2,string y2,string z2)
+	Box::Box(string x,string y,string z,string pitch,
+		string yaw,string roll,string x2,string y2,string z2)
 		: size(x2,y2,z2),Shapes(x,y,z,pitch,yaw,roll)
 		{
 		}
@@ -60,7 +60,9 @@
 
 	void Sphere::put_map(cv::Mat &image,double scale){
 
-		circle(image,(stod(pose.x)/scale,stod(pose.y)/scale),radius/scale,(0,255,0),2);
+		Point center(stod(pose.x)/scale,stod(pose.y)/scale);
+
+		circle(image,center,stod(radius)/scale,(0,255,0),2);
 
 	}
 
@@ -72,9 +74,9 @@
 
 	void Cylinder::put_map(cv::Mat &image,double scale){
 
+		Point center((stod(pose.x)/scale,stod(pose.y)/scale));
 
-
-		circle(image,(stod(pose.x)/scale,stod(pose.y)/scale),radius/scale,(0,255,0),2);
+		circle(image,center,stod(radius)/scale,(0,255,0),2);
 
 	}
 

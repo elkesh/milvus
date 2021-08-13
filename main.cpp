@@ -4,9 +4,12 @@
 #include "rectangles_interface.hpp"
 #include "xml_interface.hpp"
 #include "world_interface.hpp"
+#include "tinyxml2.h"
+using namespace tinyxml2;
 using namespace std;
 using namespace cv;
 int main(){
+
 
     
     
@@ -29,7 +32,7 @@ int main(){
     
     parser_func(ptr_to_rect,scale,image);
 
-    generator((double)rows, (double)cols,scale);
+    generator((double)rows, (double)cols,scale,image);
 
     flip(image,image,0);
     imwrite("result.jpg",image);

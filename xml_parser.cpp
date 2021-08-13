@@ -166,8 +166,6 @@ int index=0;
 
     XMLError eResult = xmlDoc.SaveFile("new_model/model.sdf");
 
-    generate_map();
-
 
 
 

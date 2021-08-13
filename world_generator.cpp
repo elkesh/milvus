@@ -3,6 +3,7 @@
 #include "tinyxml2.h"
 #include "world_interface.hpp"
 #include <string>
+#include "map_generator.hpp"
 using namespace std;
 using namespace tinyxml2;
 
@@ -23,7 +24,7 @@ void add_model(XMLDocument &doc,string model_name,XMLElement *world, string pose
 
 }
 
-void generator(double rows, double colms,double scale){
+void generator(double rows, double colms,double scale,Mat &image){
 
 	XMLDocument xmlDoc;
 
@@ -78,10 +79,9 @@ void generator(double rows, double colms,double scale){
 			
 
 			getline(cin,pose);
-			
-			cout<<"uras"<<endl;
-			
 			add_model(xmlDoc,model,pWorld,pose);
+			generate_map(model,pose,image,scale);
+
 
 
 		}

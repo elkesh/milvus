@@ -1,33 +1,40 @@
 #include "map_generator.hpp"
 #include "tinyxml2.h"
 #include <iostream>
+#include "xml_interface.hpp"
+#include "model_interface.hpp"
 using namespace std;
 using namespace tinyxml2;
 
 XMLElement* xml_iterator(char* target, XMLElement* root){
 
 	XMLElement* current;
-
+	cout<<root->Name()<<endl;
 	if(root->Name()==target)
 		return root;
 
-	if(root->Name()!=target && root->FirstChildElement()!=nullptr){
+	else {
+		if(root->FirstChildElement()!=0){
 
-		current = xml_iterator(target,root->FirstChildElement());
-	}else if(root->Name()!=target){
-		while(root->NextSiblingElement()!=nullptr){
-			current = xml_iterator(target,root->NextSiblingElement());
-		}
-		
+			current = xml_iterator(target,root->FirstChildElement());
+			if(current!=0 && current->Name()==target){
+				return current;
+			}
+		}	
+		else{
+			while(root->NextSiblingElement()!=0){				
+				current = xml_iterator(target,root->NextSiblingElement());
+				if(current!=0 && current->Name()==target)
+					return current;
+				}
 	}
-
-	return current;
+	return 0;
 
 }
 
-const char** string_parser(const char* head,int size){
+char** string_parser(const char* head,int size){
 
-	const char** return_string=nullptr;
+	char** return_string=nullptr;
 	return_string=new char*[size];//bunu yapmadan da dene
 
 
@@ -44,7 +51,7 @@ const char** string_parser(const char* head,int size){
 
 		}else{
 
-			return_string[index][inner_index]=*head
+			return_string[index][inner_index]=*head;
 			inner_index++;
 		}
 
@@ -56,23 +63,22 @@ const char** string_parser(const char* head,int size){
 }
 
 
-void generate_map(/*string model, string pose*/){
+void generate_map(string model, string pose,Mat &image,double scale){
 
 	XMLDocument xml_doc;
-
-	XMLError eResult = xml_doc.LoadFile("new_model/model.sdf");
+	
+	XMLError eResult = xml_doc.LoadFile(caster("/usr/share/gazebo-9/models/"+model+"/model.sdf"));
 
 	XMLElement* root=xml_doc.FirstChildElement("sdf");
 
-	XMLElement* model = root->FirstChildElement("model");
+	XMLElement* model_name = root->FirstChildElement("model");
 
-	XMLElement* link = model->FirstChildElement("link");
+	XMLElement* link = model_name->FirstChildElement("link");
 
 	
 
-	for(; link != nullptr; link=model->NextSiblingElement("link")){
+	for(; link != 0; link=link->NextSiblingElement("link")){
 
-			
 		XMLElement* iterator=xml_iterator("collision",link);
 		XMLElement* geo=xml_iterator("geometry",iterator);
 		XMLElement* pose=xml_iterator("pose",link);
@@ -84,10 +90,10 @@ void generate_map(/*string model, string pose*/){
 
 
 
-		if(geo->FirstChildElement()=="box"){
+		if(geo->FirstChildElement()->Name()=="box"){
 
 			XMLElement* size=xml_iterator("size",geo);
-			char* size_value=size->GetText();
+			const char* size_value=size->GetText();
 
 			char** size_string=string_parser(size_value,3);
 
@@ -97,10 +103,10 @@ void generate_map(/*string model, string pose*/){
 
 			new_box.put_map(image,scale);
 
-		}else if(geo->FirstChildElement()=="sphere"){
+		}else if(geo->FirstChildElement()->Name()=="sphere"){
 
 			XMLElement* radius=xml_iterator("radius",geo);
-			char* radius_value=radius->GetText();
+			const char* radius_value=radius->GetText();
 
 			char** radius_string=string_parser(radius_value,1);
 
@@ -109,18 +115,18 @@ void generate_map(/*string model, string pose*/){
 
 			new_sphere.put_map(image,scale);
 
-		}else if(geo->FirstChildElement()=="cylinder"){
+		}else if(geo->FirstChildElement()->Name()=="cylinder"){
 
 
 			XMLElement* radius=xml_iterator("radius",geo);
 			XMLElement* height=xml_iterator("height",geo);
-			char* radius_value=radius->GetText();
-			char* height_value=height->GetText();
+			const char* radius_value=radius->GetText();
+			const char* height_value=height->GetText();
 
 			char** radius_string=string_parser(radius_value,1);
 			char** height_string=string_parser(height_value,1);
 
-			Sphere new_cylinder=Sphere(pose_string[0],pose_string[1],pose_string[2],
+			Cylinder new_cylinder=Cylinder(pose_string[0],pose_string[1],pose_string[2],
 			pose_string[3],pose_string[4],pose_string[5],radius_string[0]
 			,height_string[0]);
 

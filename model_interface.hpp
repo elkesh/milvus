@@ -17,8 +17,7 @@ public:
 	    string roll;
 
 	    basic_pose(string x="0",string y="0",string z="0",string pitch="0"
-	    ,string yaw="0",string roll="0"):
-	    x(x),y(y),z(z),pitch(pitch),yaw(yaw),roll(roll){}
+	    ,string yaw="0",string roll="0");
 
 	};
 	basic_pose pose;
