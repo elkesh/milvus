@@ -9,28 +9,43 @@ using namespace tinyxml2;
 XMLElement* xml_iterator(char* target, XMLElement* root){
 
 	XMLElement* current;
-	cout<<root->Name()<<endl;
-	if(root->Name()==target)
-		return root;
+	cout<<"uras alkas"<<endl;
 
-	else {
+	string target_full;
+	int i=0;
+	while(1){
+
+		if(target[i]=='\0')
+			break;
+		target_full=target_full+target[i];
+		i++;
+
+	}
+
+
+	if(root->Name()==target_full)
+		return root;	
+	else{
 		if(root->FirstChildElement()!=0){
 
 			current = xml_iterator(target,root->FirstChildElement());
-			if(current!=0 && current->Name()==target){
+			if(current!=0)
 				return current;
-			}
-		}	
-		else{
-			while(root->NextSiblingElement()!=0){				
-				current = xml_iterator(target,root->NextSiblingElement());
-				if(current!=0 && current->Name()==target)
-					return current;
-				}
+		}
+		if(root->NextSiblingElement()!=0){			
+										
+			current = xml_iterator(target,root->NextSiblingElement());
+			if(current!=0)
+				return current;			
+		}
+		else
+			return 0;
 	}
-	return 0;
-
 }
+
+	
+
+
 
 char** string_parser(const char* head,int size){
 
