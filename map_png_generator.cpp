@@ -9,9 +9,8 @@ using namespace tinyxml2;
 XMLElement* xml_iterator(char* target, XMLElement* root){
 
 	XMLElement* current;
-	cout<<"uras alkas"<<endl;
-
-	string target_full;
+	
+	string target_full="";
 	int i=0;
 	while(1){
 
@@ -23,9 +22,9 @@ XMLElement* xml_iterator(char* target, XMLElement* root){
 	}
 
 
-	if(root->Name()==target_full)
+	if(root->Name()==target_full){
 		return root;	
-	else{
+	}else{
 		if(root->FirstChildElement()!=0){
 
 			current = xml_iterator(target,root->FirstChildElement());
@@ -38,39 +37,51 @@ XMLElement* xml_iterator(char* target, XMLElement* root){
 			if(current!=0)
 				return current;			
 		}
-		else
-			return 0;
+		return 0;
 	}
 }
+bool compare_string_with_ptrtochar(string a,const char* b){
 
-	
+	int index=0;
+	while(a[index]!='\0' && b[index]!='\0'){
+		if(a[index]!=b[index])
+			return false;
+		index++;
+	}
+	if(a[index]!=b[index])
+		return false;
 
+	return true;
+}
 
 
 char** string_parser(const char* head,int size){
 
 	char** return_string=nullptr;
-	return_string=new char*[size];//bunu yapmadan da dene
-
-
-
+	return_string=new char*[size];
 
 	int index=0;
 	int inner_index=0;
+	int head_index=0;
 
 	while(index<size){
 
-		if(*head!=' '){
+		if(head[head_index]=='\0'){
+			return_string[index][inner_index]='\0';
+			break;
+		}
+		if(head[head_index]==' '){
+			return_string[index][inner_index]='\0';
 			index++;
 			return_string[index]=new char[10];
+			inner_index=0;
 
 		}else{
-
-			return_string[index][inner_index]=*head;
+			return_string[index][inner_index]=head[head_index];
 			inner_index++;
 		}
 
-		head++;
+		head_index++;
 	}
 
 	return return_string;
@@ -78,7 +89,7 @@ char** string_parser(const char* head,int size){
 }
 
 
-void generate_map(string model, string pose,Mat &image,double scale){
+void generate_map(string model, const char* pose,Mat &image,double scale){
 
 	XMLDocument xml_doc;
 	
@@ -96,17 +107,11 @@ void generate_map(string model, string pose,Mat &image,double scale){
 
 		XMLElement* iterator=xml_iterator("collision",link);
 		XMLElement* geo=xml_iterator("geometry",iterator);
-		XMLElement* pose=xml_iterator("pose",link);
 
-		const char* position_attitude=pose->GetText();
-
-
-		char** pose_string = string_parser(position_attitude,6);
-
-
-
-		if(geo->FirstChildElement()->Name()=="box"){
-
+		char** pose_string = string_parser(pose,6);
+	
+		if(compare_string_with_ptrtochar("box",geo->FirstChildElement()->Name())) {//box
+			
 			XMLElement* size=xml_iterator("size",geo);
 			const char* size_value=size->GetText();
 
@@ -118,7 +123,8 @@ void generate_map(string model, string pose,Mat &image,double scale){
 
 			new_box.put_map(image,scale);
 
-		}else if(geo->FirstChildElement()->Name()=="sphere"){
+
+		}else if(compare_string_with_ptrtochar("sphere",geo->FirstChildElement()->Name())){//sphere
 
 			XMLElement* radius=xml_iterator("radius",geo);
 			const char* radius_value=radius->GetText();
@@ -130,7 +136,7 @@ void generate_map(string model, string pose,Mat &image,double scale){
 
 			new_sphere.put_map(image,scale);
 
-		}else if(geo->FirstChildElement()->Name()=="cylinder"){
+		}else if(compare_string_with_ptrtochar("cylinder",geo->FirstChildElement()->Name())){//cylinder
 
 
 			XMLElement* radius=xml_iterator("radius",geo);

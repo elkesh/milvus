@@ -35,9 +35,7 @@
 
 		int row=image.rows;
 		int colm=image.cols;
-
-
-
+		
 		Point pt0((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
 		Point pt1((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
 		Point pt2((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
@@ -46,7 +44,7 @@
 		line(image, pt0,pt1,(255,255,255),3);
 		line(image, pt1,pt3,(255,255,255),3);		
 		line(image, pt3,pt2,(255,255,255),3);
-		line(image, pt2,pt0,(255,255,255),3);		
+		line(image, pt2,pt0,(255,255,255),3);	
 		
 		
 

@@ -8,7 +8,7 @@ using namespace std;
 using namespace tinyxml2;
 
 
-void add_model(XMLDocument &doc,string model_name,XMLElement *world, string pose){
+void add_model(XMLDocument &doc,string model_name,XMLElement *world, const char* pose){
 
 	XMLElement *terrain = doc.NewElement("include");
     world->InsertEndChild(terrain);
@@ -18,7 +18,7 @@ void add_model(XMLDocument &doc,string model_name,XMLElement *world, string pose
     terrain->InsertEndChild(terrain_uri);
 
     XMLElement *pPose = doc.NewElement("pose");
-    pPose->SetText(caster(pose));
+    pPose->SetText(pose);
     terrain->InsertEndChild(pPose);
 
 
@@ -45,7 +45,7 @@ void generator(double rows, double colms,double scale,Mat &image){
     walls_y=to_string(-(rows/2)*scale);
     walls_x=to_string(-(colms/2)*scale);
 
-    add_model(xmlDoc,"new_model",pWorld,walls_x+" "+walls_y+" 0 0 0 0");
+    add_model(xmlDoc,"new_model",pWorld,caster(walls_x+" "+walls_y+" 0 0 0 0"));
 
 
 	
@@ -67,8 +67,6 @@ void generator(double rows, double colms,double scale,Mat &image){
 				
 		getline(cin,model);
 		
-		cout<<model<<endl;
-		
 		
 
 		if(model=="q")
@@ -77,20 +75,17 @@ void generator(double rows, double colms,double scale,Mat &image){
 
 			cout<<"give the position of the model relative to the origin of the world"<<endl;
 			
-
 			getline(cin,pose);
-			add_model(xmlDoc,model,pWorld,pose);
-			generate_map(model,pose,image,scale);
+			add_model(xmlDoc,model,pWorld,caster(pose));
+			generate_map(model,caster(pose),image,scale);
 
-
-
-		}
+		}	
 
 		
 
 	}
 
-
+	
 	XMLElement *sun = xmlDoc.NewElement("include");
     pWorld->InsertEndChild(sun);
 
@@ -100,7 +95,7 @@ void generator(double rows, double colms,double scale,Mat &image){
 
     XMLError eResult = xmlDoc.SaveFile("generated_world.world");
 
-
+    
 
 
 }
