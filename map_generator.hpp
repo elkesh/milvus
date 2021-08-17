@@ -4,4 +4,4 @@ using namespace cv;
 using namespace std;
 
 
-void generate_map(string model, string pose,Mat &image,double scale);
+void generate_map(string model, const char* pose,Mat &image,double scale);

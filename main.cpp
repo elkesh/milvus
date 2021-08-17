@@ -10,11 +10,10 @@ using namespace std;
 using namespace cv;
 int main(){
     
-
     cv::Mat image;
     cv::Mat binary_image;
     image = cv::imread("deneme.jpg");
-    flip(image,image,0);
+    flip(image,image,0);    
 
     int rows = image.rows;
     int cols = image.cols;
@@ -32,10 +31,10 @@ int main(){
     generator((double)rows, (double)cols,scale,image);
 
     flip(image,image,0);
+    cout<<image.at<Vec3b>(x,y,z)[1]<<endl;
+    imshow("uras",image);
+    waitKey(0);
     imwrite("result.jpg",image);
-    
-    
-    
-    
+
     return 0;
 }
