@@ -6,8 +6,12 @@
             <pose>-20.000000 -15.000000 0 0 0 0</pose>
         </include>
         <include>
-            <uri>model://new_box</uri>
-            <pose>12 23 5 0 0 0</pose>
+            <uri>model://box_model</uri>
+            <pose>0 0 0 0 0 0</pose>
+        </include>
+        <include>
+            <uri>model://box_model</uri>
+            <pose>-400 -300 0 0 0 0</pose>
         </include>
         <include>
             <uri>model://sun</uri>

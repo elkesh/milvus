@@ -43,7 +43,9 @@ public:
 
 	Box(string x="0",string y="0",string z="0",string pitch="0",
 		string yaw="0",string roll="0", string x2="0",string y2="0",string z2="0");
-	int image_world_transform(int pt,bool row_colm,int number_of_rowcolumn);
+	void image_world_transform(int number_of_row,int number_of_column);
+
+	void size_scale_change(double scale);
 
 	void put_map(cv::Mat &image,double);
 };

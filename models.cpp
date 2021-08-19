@@ -20,16 +20,25 @@
 		: size(x2,y2,z2),Shapes(x,y,z,pitch,yaw,roll)
 		{
 		}
-		/*
-	int Box::image_world_transform(int pt,bool row_colm,int number_of_rowcolumn){//0 if row , 1 if column
+	
+	void Box::image_world_transform(int number_of_row,int number_of_column){//0 if row , 1 if column
 
+		pose.x=to_string(number_of_column/2.0+stod(pose.x));
+		pose.y=to_string(number_of_row/2.0+stod(pose.y));
+		/*
 		if(row_colm==0){
 			return number_of_rowcolumn/2-pt;
 		}else{
 			return number_of_rowcolumn/2+pt;
-		}
+		}*/
 
-	}*/
+	}
+	void Box::size_scale_change(double scale){
+
+		size.x_size=to_string(stod(size.x_size)/scale);
+		size.y_size=to_string(stod(size.y_size)/scale);
+
+	}
 
 	void Box::put_map(cv::Mat &image,double scale){
 
@@ -41,12 +50,11 @@
 		Point pt2((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
 		Point pt3((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
 
+
 		line(image, pt0,pt1,(255,255,255),3);
 		line(image, pt1,pt3,(255,255,255),3);		
 		line(image, pt3,pt2,(255,255,255),3);
 		line(image, pt2,pt0,(255,255,255),3);	
-		
-		
 
 	}
 
