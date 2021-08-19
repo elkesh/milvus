@@ -59,13 +59,14 @@ char** string_parser(const char* head,int size){
 
 	char** return_string=nullptr;
 	return_string=new char*[size];
+	return_string[0]=new char[10];
 
 	int index=0;
 	int inner_index=0;
 	int head_index=0;
 
 	while(index<size){
-
+		
 		if(head[head_index]=='\0'){
 			return_string[index][inner_index]='\0';
 			break;
@@ -73,7 +74,8 @@ char** string_parser(const char* head,int size){
 		if(head[head_index]==' '){
 			return_string[index][inner_index]='\0';
 			index++;
-			return_string[index]=new char[10];
+			if(index<size)
+				return_string[index]=new char[10];
 			inner_index=0;
 
 		}else{
@@ -101,8 +103,6 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 
 	XMLElement* link = model_name->FirstChildElement("link");
 
-	
-
 	for(; link != 0; link=link->NextSiblingElement("link")){
 
 		XMLElement* iterator=xml_iterator("collision",link);
@@ -121,8 +121,10 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			pose_string[3],pose_string[4],pose_string[5],size_string[0],size_string[1]
 			,size_string[2]);
 
-			new_box.put_map(image,scale);
+			new_box.image_world_transform(image.rows,image.cols);
+			new_box.size_scale_change(scale);
 
+			new_box.put_map(image,1);
 
 		}else if(compare_string_with_ptrtochar("sphere",geo->FirstChildElement()->Name())){//sphere
 
@@ -134,7 +136,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			Sphere new_sphere=Sphere(pose_string[0],pose_string[1],pose_string[2],
 			pose_string[3],pose_string[4],pose_string[5],radius_string[0]);
 
-			new_sphere.put_map(image,scale);
+			new_sphere.put_map(image,1);
 
 		}else if(compare_string_with_ptrtochar("cylinder",geo->FirstChildElement()->Name())){//cylinder
 
@@ -151,7 +153,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			pose_string[3],pose_string[4],pose_string[5],radius_string[0]
 			,height_string[0]);
 
-			new_cylinder.put_map(image,scale);
+			new_cylinder.put_map(image,1);
 		}
 		
 

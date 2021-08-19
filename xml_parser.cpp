@@ -42,14 +42,7 @@ void generateWall(int** rectangle,XMLDocument &doc,int number,XMLElement* root,d
 
     wall.put_map(image,scale);
 
-
-
-
-    
-
-    string wall_number=to_string(number);   
-
-    
+    string wall_number=to_string(number);     
     
 
     XMLElement *pElement =doc.NewElement("link");
@@ -153,7 +146,7 @@ void parser_func(int** rectangles,double scale,cv::Mat &image)
     pFrame->SetAttribute("frame","");
     pFrame->SetText("0 0 0 0 0 0");
     pRoot->InsertEndChild(pFrame);
-int index=0;
+    int index=0;
 
     while(rectangles[index][0]!=-123){
 

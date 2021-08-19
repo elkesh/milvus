@@ -47,14 +47,9 @@ void generator(double rows, double colms,double scale,Mat &image){
 
     add_model(xmlDoc,"new_model",pWorld,caster(walls_x+" "+walls_y+" 0 0 0 0"));
 
-
-	
-
 	
 	string model;
 	string pose;
-	char disected_pose[11];
-
 	
 	getline(cin,model);
 

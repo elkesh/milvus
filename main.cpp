@@ -31,10 +31,11 @@ int main(){
     generator((double)rows, (double)cols,scale,image);
 
     flip(image,image,0);
-    cout<<image.at<Vec3b>(x,y,z)[1]<<endl;
+
     imshow("uras",image);
     waitKey(0);
-    imwrite("result.jpg",image);
 
+    imwrite("result.jpg",image);
+    
     return 0;
 }
