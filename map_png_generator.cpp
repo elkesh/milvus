@@ -3,6 +3,7 @@
 #include <iostream>
 #include "xml_interface.hpp"
 #include "model_interface.hpp"
+#include <fstream>
 using namespace std;
 using namespace tinyxml2;
 
@@ -59,23 +60,28 @@ char** string_parser(const char* head,int size){
 
 	char** return_string=nullptr;
 	return_string=new char*[size];
-	return_string[0]=new char[10];
+	return_string[0]=new char[50];
 
 	int index=0;
 	int inner_index=0;
 	int head_index=0;
 
 	while(index<size){
+
+		if(head_index==0)
+			while(head[head_index]==' ')
+				head_index++;
 		
 		if(head[head_index]=='\0'){
 			return_string[index][inner_index]='\0';
 			break;
 		}
 		if(head[head_index]==' '){
+
 			return_string[index][inner_index]='\0';
 			index++;
 			if(index<size)
-				return_string[index]=new char[10];
+				return_string[index]=new char[50];
 			inner_index=0;
 
 		}else{
@@ -154,6 +160,49 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			,height_string[0]);
 
 			new_cylinder.put_map(image,1);
+		}else if(compare_string_with_ptrtochar("mesh",geo->FirstChildElement()->Name())){
+			
+			XMLElement* uri=xml_iterator("uri",geo->FirstChildElement());
+			
+			string filepath="/usr/share/gazebo-9/models/";			
+			
+			const char* remain=uri->GetText();
+
+			int index=0;
+			bool first_part=true;
+			while(remain[index]!='\0'){
+
+				if(!first_part)
+					filepath=filepath+remain[index];
+				if(index>0)
+					if (remain[index]=='/' && remain[index-1]=='/')
+						first_part=false;
+
+				index++;
+
+			}
+
+			char* line;
+			ifstream infile;
+			infile.open(caster(filepath));
+			
+			while(!infile.eof()){
+
+
+				infile.getline(line,100);
+				char** line_disected=string_parser(line,10);
+
+				if(compare_string_with_ptrtochar("vertex",line_disected[0])){
+
+					double x=image.cols/2.0+stod(line_disected[1]);
+					double y=image.rows/2.0+stod(line_disected[2]);
+
+					image.at<double>(x,y)=(255,255,255);
+
+				}
+
+			}
+
 		}
 		
 

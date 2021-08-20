@@ -21,7 +21,7 @@
 		{
 		}
 	
-	void Box::image_world_transform(int number_of_row,int number_of_column){//0 if row , 1 if column
+	void Shapes::image_world_transform(int number_of_row,int number_of_column){//0 if row , 1 if column
 
 		pose.x=to_string(number_of_column/2.0+stod(pose.x));
 		pose.y=to_string(number_of_row/2.0+stod(pose.y));
