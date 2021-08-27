@@ -7,3 +7,4 @@ then give the names and poses of the models that you want to add as ordered but 
 now both your world and wall model is ready (model as new_model world file as generated_world.world)
 add the new_model folder to the gazebox/models directory and the generated_world.world file to gazebox/worlds directory
 now you can open the generated world by opening gazebo with the command gazebo worlds/generated_world.world
+models de kaldım
