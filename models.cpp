@@ -227,7 +227,7 @@ using Eigen::MatrixXd;
 			Point* list=new Point[vertices[0][0]];
 			for(int i=0;i<vertices[0][0];i++){
 
-				
+			//pointer to last 	
 			}
 		}
 
