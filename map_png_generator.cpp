@@ -7,6 +7,7 @@
 using namespace std;
 using namespace tinyxml2;
 
+
 XMLElement* xml_iterator(char* target, XMLElement* root){
 
 	XMLElement* current;
@@ -127,10 +128,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			pose_string[3],pose_string[4],pose_string[5],size_string[0],size_string[1]
 			,size_string[2]);
 
-			new_box.image_world_transform(image.rows,image.cols);
-			new_box.size_scale_change(scale);
-
-			new_box.put_map(image,1);
+			new_box.put_map(image,scale,false);
 
 		}else if(compare_string_with_ptrtochar("sphere",geo->FirstChildElement()->Name())){//sphere
 
@@ -182,7 +180,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 
 			}
 
-			char* line;
+			char* line=new char[200];
 			ifstream infile;
 			infile.open(caster(filepath));
 			
@@ -194,10 +192,14 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 
 				if(compare_string_with_ptrtochar("vertex",line_disected[0])){
 
-					double x=image.cols/2.0+stod(line_disected[1]);
-					double y=image.rows/2.0+stod(line_disected[2]);
+					double x=(stod(line_disected[2])+stod(pose_string[1]))/scale;
+					double y=(stod(line_disected[1])+stod(pose_string[0]))/scale;
 
-					image.at<double>(x,y)=(255,255,255);
+					x=x+image.rows/2.0;
+					y=y+image.cols/2.0;
+					
+
+					image.at<Vec3b>(x,y)=Vec3b(255,0,0);
 
 				}
 
