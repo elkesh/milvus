@@ -16,13 +16,16 @@ public:
 	    string yaw;
 	    string roll;
 
-	    basic_pose(string x="0",string y="0",string z="0",string pitch="0"
-	    ,string yaw="0",string roll="0");
+	    basic_pose(string x="0",string y="0",string z="0",string roll="0"
+	    ,string pitch="0",string yaw="0");
 
 	};
 	basic_pose pose;
 
-	Shapes(string x,string y,string z,string pitch,string yaw,string roll);
+	Shapes(string x,string y,string z,string roll,string pitch,string yaw);
+	double image_world_transform(int number_of_row_column,double x_or_y);
+	double* pointTransform(double* coordinate);
+	double coord_scale_change(double scale,double crd);
 
 };
 
@@ -41,11 +44,11 @@ public:
 	};
 	basic_size size;
 
-	Box(string x="0",string y="0",string z="0",string pitch="0",
-		string yaw="0",string roll="0", string x2="0",string y2="0",string z2="0");
-	int image_world_transform(int pt,bool row_colm,int number_of_rowcolumn);
+	Box(string x="0",string y="0",string z="0",string roll="0",
+		string pitch="0",string yaw="0", string x2="0",string y2="0",string z2="0");
 
-	void put_map(cv::Mat &image,double);
+	void put_map(cv::Mat &image,double,bool);
+	double** find_disection_vertexes(double** coordinates,double height);
 };
 
 class Sphere : public Shapes{

@@ -2,7 +2,8 @@
 #include "model_interface.hpp"
 #include <math.h>
 #include <Eigen/Dense>
-#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/segment.hpp>
+#include <boost/geometry/algorithms/intersection.hpp>
 
 namespace bg=boost::geometry;
 using Eigen::MatrixXd;
@@ -35,7 +36,7 @@ using Eigen::MatrixXd;
 		return last_coord;
 
 	}
-	void Box::coord_scale_change(double scale,double crd){
+	double Shapes::coord_scale_change(double scale,double crd){
 
 		return crd/scale;
 
@@ -46,9 +47,6 @@ using Eigen::MatrixXd;
 			roll=stod(pose.roll);
 			pitch=stod(pose.pitch);
 			yaw=stod(pose.yaw);
-			cout<<roll<<endl;
-			cout<<pitch<<endl;
-			cout<<yaw<<endl;
 			double x,y,z;
 			x=stod(pose.x);
 			y=stod(pose.y);
@@ -78,17 +76,12 @@ using Eigen::MatrixXd;
 			point(2,0)=coordinate[2];
 			point(3,0)=1;
 
-			cout<<m<<endl;
-
 			double* new_point=new double[3];
 			MatrixXd result=m*point;
 
 			new_point[0]=result(0,0);
 			new_point[1]=result(1,0);
 			new_point[2]=result(2,0);
-
-			for(int i=0;i<3;i++)
-				cout<<new_point[i]<<endl;
 
 			return new_point;
 
@@ -104,7 +97,8 @@ using Eigen::MatrixXd;
 		}
 		int under_array[under];
 
-		for(int i=0,int j=0;i<8;i++){
+		int j=0;
+		for(int i=0;i<8;i++){
 			if(coordinates[i][2]<height){
 				under_array[j]=i;
 				j++;
@@ -116,24 +110,30 @@ using Eigen::MatrixXd;
 
 			case 1:
 				number_of_intersection_vertices=3;
+				break;
 			case 2:
 				number_of_intersection_vertices=4;
+				break;
 			case 3:
 				number_of_intersection_vertices=5;
+				break;
 			case 4:
 				number_of_intersection_vertices=4;
+				break;
 			case 5:
 				number_of_intersection_vertices=5;
+				break;
 			case 6:
 				number_of_intersection_vertices=4;
+				break;
 			case 7:
 				number_of_intersection_vertices=3;
+				break;
 			default:
 				number_of_intersection_vertices=0;
-
 		}
 
-		double** return_vertices=new double*[number_of_intersection_vertices+1];
+		double** return_vertices=new double*[(int)number_of_intersection_vertices+1];
 		return_vertices[0]=new double[1];
 		return_vertices[0][0]=number_of_intersection_vertices;
 		int return_index=1;
@@ -157,19 +157,22 @@ using Eigen::MatrixXd;
 
 				if(difference==1){
 
-					if(coordinates[j][3]>=height){
+					if(coordinates[j][2]>=height){
 
 						return_vertices[return_index]=new double[2];
 						for(int k=0;k<2;k++){
 
 							return_vertices[return_index][k]=coordinates[under_array[i]][k]+(coordinates[j][k]-coordinates[under_array[i]][k])*((height
-								-coordinates[under_array[i]][3])/(coordinates[j][3]-coordinates[under_array[i]][3]));
+								-coordinates[under_array[i]][2])/(coordinates[j][2]-coordinates[under_array[i]][2]));
 
 						}
+
+						return_index++;
 					}
 
 				}
 			}
+
 		}
 
 	return return_vertices;
@@ -190,20 +193,20 @@ using Eigen::MatrixXd;
 				coord[i]=new double[3];
 
 				if(i%8<4)
-					coord[i][0]=size.x_size/2;
+					coord[i][0]=stod(size.x_size)/2;
 				else
-					coord[i][0]=-size.x_size/2;
+					coord[i][0]=-stod(size.x_size)/2;
 				if(i%4<2)
-					coord[i][1]=size.y_size/2;
+					coord[i][1]=stod(size.y_size)/2;
 				else
-					coord[i][1]=-size.y_size/2;
+					coord[i][1]=-stod(size.y_size)/2;
 				if(i%2<1)
-					coord[i][2]=size.z_size/2;
+					coord[i][2]=stod(size.z_size)/2;
 				else
-					coord[i][2]=-size.z_size/2;
+					coord[i][2]=-stod(size.z_size)/2;
 
 			}
-			double** new_coord=new double[8];
+			double** new_coord=new double*[8];
 
 			for(int i=0;i<8;i++){
 				new_coord[i]=new double[3];
@@ -212,9 +215,9 @@ using Eigen::MatrixXd;
 				}
 			}
 
-			double** vertices=find_disection_vertexes(new_coord);
+			double** vertices=find_disection_vertexes(new_coord,0);
 
-			for(int i=1;i<vertices[0][0];i++){
+			for(int i=1;i<vertices[0][0]+1;i++){
 
 				
 				vertices[i][0]=coord_scale_change(scale,vertices[i][0]);
@@ -224,10 +227,44 @@ using Eigen::MatrixXd;
 				
 			}
 
-			Point* list=new Point[vertices[0][0]];
-			for(int i=0;i<vertices[0][0];i++){
 
-			//pointer to last 	
+			Point* list=new Point[(int)vertices[0][0]];
+			for(int i=1;i<vertices[0][0]+1;i++){
+				int small=0;
+				int small_vec_index=0;
+				int big=0;
+				int big_vector_index=0;
+				cout<<i<<endl;
+				for(int j=1;j<vertices[0][0]+1;j++){
+
+					if(i!=j && (vertices[i][0]-vertices[j][0])<small){
+						small=vertices[i][0]-vertices[j][0];
+						small_vec_index=j;
+					}
+					if(i!=j && (vertices[i][0]-vertices[j][0])>big){
+						big=vertices[i][0]-vertices[j][0];
+						big_vector_index=j;
+					}
+				}
+				if(i>1){
+
+					if(list[i-2].x==vertices[small_vec_index][0] && list[i-2].y==vertices[small_vec_index][1]){
+						list[i-1].x=vertices[big_vector_index][0];
+						list[i-1].y=vertices[big_vector_index][1];
+					}else{
+						list[i-1].x=vertices[small_vec_index][0];
+						list[i-1].y=vertices[small_vec_index][1];
+					}
+				}else{
+					list[i-1].x=vertices[small_vec_index][0];
+					list[i-1].y=vertices[small_vec_index][1];
+				}
+			}
+
+			
+
+			for(int i=0;i<vertices[0][0];i++){
+				line(image,list[i],list[(i+1)%(int)vertices[0][0]],(255,255,255),3);
 			}
 		}
 
@@ -237,15 +274,15 @@ using Eigen::MatrixXd;
 
 		if(flag_from_image){
 		
-		Point pt0((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
-		Point pt1((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
-		Point pt2((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
-		Point pt3((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
+			Point pt0((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
+			Point pt1((stod(pose.x)-stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
+			Point pt2((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
+			Point pt3((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
 
-		line(image, pt0,pt1,(255,255,255),3);
-		line(image, pt1,pt3,(255,255,255),3);		
-		line(image, pt3,pt2,(255,255,255),3);
-		line(image, pt2,pt0,(255,255,255),3);
+			line(image, pt0,pt1,(255,255,255),3);
+			line(image, pt1,pt3,(255,255,255),3);		
+			line(image, pt3,pt2,(255,255,255),3);
+			line(image, pt2,pt0,(255,255,255),3);
 		}	
 
 	}
