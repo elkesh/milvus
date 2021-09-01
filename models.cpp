@@ -227,40 +227,79 @@ using Eigen::MatrixXd;
 				
 			}
 
+			for(int i=1;i<vertices[0][0]+1;i++)
+				cout<<vertices[i][0]<<" "<<vertices[i][1]<<endl;
 
 			Point* list=new Point[(int)vertices[0][0]];
-			for(int i=1;i<vertices[0][0]+1;i++){
-				int small=0;
-				int small_vec_index=0;
-				int big=0;
-				int big_vector_index=0;
-				cout<<i<<endl;
+			for(int i=0;i<vertices[0][0];i++){
+				int small;
+				int small_vec_index;
+				int big;
+				int big_vector_index;
+				bool small_changed=false;
+				bool first_non_escape_iter=false;
+
+				if(i==0){
+					list[i].x=vertices[i+1][0];
+					list[i].y=vertices[i+1][1];
+					continue;
+				}
+				
 				for(int j=1;j<vertices[0][0]+1;j++){
 
-					if(i!=j && (vertices[i][0]-vertices[j][0])<small){
-						small=vertices[i][0]-vertices[j][0];
-						small_vec_index=j;
+					bool escape=false;
+					for(int k=0;k<i+1;k++){
+						if(list[k].x==vertices[j][0] && list[k].y==vertices[j][1])
+							escape=true;
 					}
-					if(i!=j && (vertices[i][0]-vertices[j][0])>big){
-						big=vertices[i][0]-vertices[j][0];
+					if(escape){
+
+						continue;
+					}
+
+					double cosine=(vertices[j][0]-list[i-1].x)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
+					cout<<cosine<<endl;
+					if(first_non_escape_iter==false){
+						first_non_escape_iter=true;
+						small=cosine;
+						small_vec_index=j;
+						big=cosine;
+						big_vector_index=j;
+						continue;
+					}
+					if(cosine<small){
+						cout<<"small calisti"<<endl;
+						small=cosine;
+						small_vec_index=j;
+						small_changed=true;
+					}
+					if(cosine>big){
+						cout<<"big calisti"<<endl;
+						big=cosine;
 						big_vector_index=j;
 					}
 				}
-				if(i>1){
+				cout<<small<<" "<<vertices[small_vec_index][0]<<" "<<big<<" "<<vertices[big_vector_index][0]<<endl;
+				cout<<"____________________________"<<endl;
+				cout<<vertices[big_vector_index][0]<<"  "<<vertices[big_vector_index][1]<<endl;
+				cout<<vertices[small_vec_index][0]<<"  "<<vertices[small_vec_index][1]<<endl;
 
-					if(list[i-2].x==vertices[small_vec_index][0] && list[i-2].y==vertices[small_vec_index][1]){
-						list[i-1].x=vertices[big_vector_index][0];
-						list[i-1].y=vertices[big_vector_index][1];
-					}else{
-						list[i-1].x=vertices[small_vec_index][0];
-						list[i-1].y=vertices[small_vec_index][1];
-					}
+				if(list[i-1].x==vertices[small_vec_index][0] && list[i-1].y==vertices[small_vec_index][1]){
+					list[i].x=vertices[big_vector_index][0];
+					list[i].y=vertices[big_vector_index][1];
+				}else if(small_changed){
+					list[i].x=vertices[small_vec_index][0];
+					list[i].y=vertices[small_vec_index][1];
 				}else{
-					list[i-1].x=vertices[small_vec_index][0];
-					list[i-1].y=vertices[small_vec_index][1];
+					list[i].x=vertices[big_vector_index][0];
+					list[i].y=vertices[big_vector_index][1];
 				}
+				cout<<"___________________________"<<endl;
+
 			}
 
+			for(int i=0;i<vertices[0][0];i++)
+				cout<<list[i]<<endl;
 			
 
 			for(int i=0;i<vertices[0][0];i++){
