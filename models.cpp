@@ -222,8 +222,8 @@ using Eigen::MatrixXd;
 				
 				vertices[i][0]=coord_scale_change(scale,vertices[i][0]);
 				vertices[i][1]=coord_scale_change(scale,vertices[i][1]);
-				vertices[i][0]=image_world_transform(colm,vertices[i][0]);
-				vertices[i][1]=image_world_transform(row,vertices[i][1]);
+				vertices[i][0]=(int)image_world_transform(colm,vertices[i][0]);
+				vertices[i][1]=(int)image_world_transform(row,vertices[i][1]);
 				
 			}
 
@@ -232,69 +232,59 @@ using Eigen::MatrixXd;
 
 			Point* list=new Point[(int)vertices[0][0]];
 			for(int i=0;i<vertices[0][0];i++){
-				int small;
-				int small_vec_index;
-				int big;
-				int big_vector_index;
-				bool small_changed=false;
-				bool first_non_escape_iter=false;
 
 				if(i==0){
 					list[i].x=vertices[i+1][0];
 					list[i].y=vertices[i+1][1];
 					continue;
 				}
-				
+				double angle[(int)vertices[0][0]-1][2];
+				int angle_index=0;
 				for(int j=1;j<vertices[0][0]+1;j++){
 
-					bool escape=false;
-					for(int k=0;k<i+1;k++){
-						if(list[k].x==vertices[j][0] && list[k].y==vertices[j][1])
-							escape=true;
-					}
-					if(escape){
-
+					if(list[i-1].x==vertices[j][0] && list[i-1].y==vertices[j][1])
 						continue;
-					}
 
+					angle[angle_index][0]=j;
+					
 					double cosine=(vertices[j][0]-list[i-1].x)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
-					cout<<cosine<<endl;
-					if(first_non_escape_iter==false){
-						first_non_escape_iter=true;
-						small=cosine;
-						small_vec_index=j;
-						big=cosine;
-						big_vector_index=j;
-						continue;
-					}
-					if(cosine<small){
-						cout<<"small calisti"<<endl;
-						small=cosine;
-						small_vec_index=j;
-						small_changed=true;
-					}
-					if(cosine>big){
-						cout<<"big calisti"<<endl;
-						big=cosine;
-						big_vector_index=j;
-					}
+					double sine=(vertices[j][1]-list[i-1].y)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
+					if(asin(sine)<0){
+						angle[angle_index][1]=3.14+acos(cosine);
+					}else
+						angle[angle_index][1]=acos(cosine);
+					angle_index++;
+				}for(int z=0;z<vertices[0][0]-1;z++){
+					cout<<angle[z][0]<<" "<<angle[z][1]<<endl;
 				}
-				cout<<small<<" "<<vertices[small_vec_index][0]<<" "<<big<<" "<<vertices[big_vector_index][0]<<endl;
-				cout<<"____________________________"<<endl;
-				cout<<vertices[big_vector_index][0]<<"  "<<vertices[big_vector_index][1]<<endl;
-				cout<<vertices[small_vec_index][0]<<"  "<<vertices[small_vec_index][1]<<endl;
-
-				if(list[i-1].x==vertices[small_vec_index][0] && list[i-1].y==vertices[small_vec_index][1]){
-					list[i].x=vertices[big_vector_index][0];
-					list[i].y=vertices[big_vector_index][1];
-				}else if(small_changed){
-					list[i].x=vertices[small_vec_index][0];
-					list[i].y=vertices[small_vec_index][1];
-				}else{
-					list[i].x=vertices[big_vector_index][0];
-					list[i].y=vertices[big_vector_index][1];
+				for(int j=0;j<vertices[0][0]-2;j++){
+					int min=j;
+					for(int k=j+1;k<vertices[0][0]-1;k++)
+						if(angle[k][1]<angle[min][1])
+							min=k;
+					double tmp1=angle[j][0],tmp2=angle[j][1];
+					angle[j][0]=angle[min][0];
+					angle[j][1]=angle[min][1];
+					angle[min][0]=tmp1;
+					angle[min][1]=tmp2;
+						
 				}
-				cout<<"___________________________"<<endl;
+				for(int z=0;z<vertices[0][0]-1;z++){
+					cout<<angle[z][0]<<" "<<angle[z][1]<<endl;
+				}
+				cout<<"urasjkjkj "<<list[i-2].x<<" "<<list[i-2].y<<" : "<<vertices[(int)angle[0][0]][0]<<" "<<vertices[(int)angle[0][0]][1]<<endl;
+				if(i>=2)
+					if(list[i-2].x==vertices[(int)angle[0][0]][0] && list[i-2].y==vertices[(int)angle[0][0]][1]){
+						list[i].x=vertices[(int)angle[(int)vertices[0][0]-2][0]][0];
+						list[i].y=vertices[(int)angle[(int)vertices[0][0]-2][0]][1];
+					}else{
+						list[i].x=vertices[(int)angle[0][0]][0];
+						list[i].y=vertices[(int)angle[0][0]][1];
+					}
+				else{
+					list[i].x=vertices[(int)angle[0][0]][0];
+					list[i].y=vertices[(int)angle[0][0]][1];
+				}
 
 			}
 
