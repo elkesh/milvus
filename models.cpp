@@ -104,8 +104,8 @@ using Eigen::MatrixXd;
 				j++;
 			}
 		}
-		double number_of_intersection_vertices;
-
+		int number_of_intersection_vertices;
+/*
 		switch(under){
 
 			case 1:
@@ -131,11 +131,10 @@ using Eigen::MatrixXd;
 				break;
 			default:
 				number_of_intersection_vertices=0;
-		}
+		}*/
 
-		double** return_vertices=new double*[(int)number_of_intersection_vertices+1];
+		double** return_vertices=new double*[8];//8 yerine max sayıyı koy.
 		return_vertices[0]=new double[1];
-		return_vertices[0][0]=number_of_intersection_vertices;
 		int return_index=1;
 
 		for(int i=0;i<under;i++){
@@ -158,13 +157,11 @@ using Eigen::MatrixXd;
 				if(difference==1){
 
 					if(coordinates[j][2]>=height){
-
 						return_vertices[return_index]=new double[2];
 						for(int k=0;k<2;k++){
 
 							return_vertices[return_index][k]=coordinates[under_array[i]][k]+(coordinates[j][k]-coordinates[under_array[i]][k])*((height
 								-coordinates[under_array[i]][2])/(coordinates[j][2]-coordinates[under_array[i]][2]));
-
 						}
 
 						return_index++;
@@ -172,8 +169,10 @@ using Eigen::MatrixXd;
 
 				}
 			}
-
 		}
+	return_vertices[0][0]=return_index-1;
+	return_vertices[return_index]=new double[1];
+	return_vertices[return_index][0]=-1;
 
 	return return_vertices;
 
@@ -250,12 +249,10 @@ using Eigen::MatrixXd;
 					double cosine=(vertices[j][0]-list[i-1].x)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
 					double sine=(vertices[j][1]-list[i-1].y)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
 					if(asin(sine)<0){
-						angle[angle_index][1]=3.14+acos(cosine);
+						angle[angle_index][1]=2*3.14-acos(cosine);
 					}else
 						angle[angle_index][1]=acos(cosine);
 					angle_index++;
-				}for(int z=0;z<vertices[0][0]-1;z++){
-					cout<<angle[z][0]<<" "<<angle[z][1]<<endl;
 				}
 				for(int j=0;j<vertices[0][0]-2;j++){
 					int min=j;
@@ -269,10 +266,18 @@ using Eigen::MatrixXd;
 					angle[min][1]=tmp2;
 						
 				}
-				for(int z=0;z<vertices[0][0]-1;z++){
-					cout<<angle[z][0]<<" "<<angle[z][1]<<endl;
+				int max_difference=0;
+				bool right_left;
+				bool up_down;
+				for(int j=0;j<vertices[0][0]-1;j++){
+					for(int k=0;k<vertices[0][0]-1;k++){
+						if()
+					}
+					if()
 				}
-				cout<<"urasjkjkj "<<list[i-2].x<<" "<<list[i-2].y<<" : "<<vertices[(int)angle[0][0]][0]<<" "<<vertices[(int)angle[0][0]][1]<<endl;
+				for(int j=0;j<vertices[0][0]-1;j++){
+					cout<<angle[j][0]<<" "<<angle[j][1]<<endl;
+				}
 				if(i>=2)
 					if(list[i-2].x==vertices[(int)angle[0][0]][0] && list[i-2].y==vertices[(int)angle[0][0]][1]){
 						list[i].x=vertices[(int)angle[(int)vertices[0][0]-2][0]][0];
@@ -285,12 +290,13 @@ using Eigen::MatrixXd;
 					list[i].x=vertices[(int)angle[0][0]][0];
 					list[i].y=vertices[(int)angle[0][0]][1];
 				}
+				cout<<vertices[(int)angle[0][0]][0]<<" ________________________ "<<vertices[(int)angle[0][0]][1]<<endl;
+
+				cout<<vertices[(int)angle[(int)vertices[0][0]-2][0]][0]<<" ______________________ "<<vertices[(int)angle[(int)vertices[0][0]-2][0]][1]<<endl;
 
 			}
-
 			for(int i=0;i<vertices[0][0];i++)
-				cout<<list[i]<<endl;
-			
+				cout<<list[i].x<<" "<<list[i].y<<endl;		
 
 			for(int i=0;i<vertices[0][0];i++){
 				line(image,list[i],list[(i+1)%(int)vertices[0][0]],(255,255,255),3);
