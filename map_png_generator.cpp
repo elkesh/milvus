@@ -179,31 +179,48 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 				index++;
 
 			}
-
-			char* line=new char[200];
-			ifstream infile;
+/*
+			char* whole_line=new char[200];
+			ifstream* infile;
 			infile.open(caster(filepath));
-			
+			Point three_points[3];
+			bool start_flag=true;
+			int count_of_vertexes=0;*/
+
+			Mesh mesh_model=Mesh(pose_string[0],pose_string[1],pose_string[2],
+			pose_string[3],pose_string[4],pose_string[5]);
+
+			mesh_model.put_map(filepath)
+/*
 			while(!infile.eof()){
 
 
-				infile.getline(line,100);
-				char** line_disected=string_parser(line,10);
+				infile.getline(whole_line,100);
+				char** line_disected=string_parser(whole_line,10);
 
 				if(compare_string_with_ptrtochar("vertex",line_disected[0])){
 
-					double x=(stod(line_disected[2])+stod(pose_string[1]))/scale;
-					double y=(stod(line_disected[1])+stod(pose_string[0]))/scale;
+					double x=(stod(line_disected[1])+stod(pose_string[0]))/scale;
+					double y=(stod(line_disected[2])+stod(pose_string[1]))/scale;
 
 					x=x+image.rows/2.0;
 					y=y+image.cols/2.0;
-					
 
-					image.at<Vec3b>(x,y)=Vec3b(255,0,0);
+					three_points[count_of_vertexes].x=x;
+					three_points[count_of_vertexes].y=y;
+					count_of_vertexes++;
+
+					if(count_of_vertexes==3){
+						
+						for(int q=0;q<3;q++){
+							line(image,three_points[q],three_points[(q+1)%3],(255,255,255),1);
+						}
+						count_of_vertexes=0;						
+					}
 
 				}
 
-			}
+			}*/
 
 		}
 		

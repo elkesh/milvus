@@ -104,34 +104,6 @@ using Eigen::MatrixXd;
 				j++;
 			}
 		}
-		int number_of_intersection_vertices;
-/*
-		switch(under){
-
-			case 1:
-				number_of_intersection_vertices=3;
-				break;
-			case 2:
-				number_of_intersection_vertices=4;
-				break;
-			case 3:
-				number_of_intersection_vertices=5;
-				break;
-			case 4:
-				number_of_intersection_vertices=4;
-				break;
-			case 5:
-				number_of_intersection_vertices=5;
-				break;
-			case 6:
-				number_of_intersection_vertices=4;
-				break;
-			case 7:
-				number_of_intersection_vertices=3;
-				break;
-			default:
-				number_of_intersection_vertices=0;
-		}*/
 
 		double** return_vertices=new double*[8];//8 yerine max sayıyı koy.
 		return_vertices[0]=new double[1];
@@ -225,6 +197,10 @@ using Eigen::MatrixXd;
 				vertices[i][1]=(int)image_world_transform(row,vertices[i][1]);
 				
 			}
+			bool break_flag=false;
+
+			
+			
 
 			for(int i=1;i<vertices[0][0]+1;i++)
 				cout<<vertices[i][0]<<" "<<vertices[i][1]<<endl;
@@ -252,6 +228,9 @@ using Eigen::MatrixXd;
 						angle[angle_index][1]=2*3.14-acos(cosine);
 					}else
 						angle[angle_index][1]=acos(cosine);
+					/*
+					if(angle[angle_index][1]>=3.14)
+						angle[angle_index][1]=angle[angle_index][1]-2*3.14;*/
 					angle_index++;
 				}
 				for(int j=0;j<vertices[0][0]-2;j++){
@@ -266,17 +245,52 @@ using Eigen::MatrixXd;
 					angle[min][1]=tmp2;
 						
 				}
-				int max_difference=0;
-				bool right_left;
-				bool up_down;
+				int number_of_angles_between=0;
+							
+				bool break_var=false;
 				for(int j=0;j<vertices[0][0]-1;j++){
 					for(int k=0;k<vertices[0][0]-1;k++){
-						if()
+						bool first_if=true;
+						bool second_if=true;
+						if(j==k)
+							continue;
+						for(int z=0;z<vertices[0][0]-1;z++){
+							if(z==j || z==k)
+								continue;
+							if(angle[j][1]>angle[k][1]){
+								if((angle[j][1]-angle[k][1])<3.14 && (angle[z][1]<angle[j][1] && angle[z][1]>angle[k][1]) && first_if){
+									number_of_angles_between++;
+									second_if=false;
+								}
+								if((angle[j][1]-angle[k][1])>3.14 && (angle[z][1]>angle[j][1] || angle[z][1]<angle[k][1]) && second_if){
+									number_of_angles_between++;
+									first_if=false;
+								}
+							}
+							else{
+								if((angle[k][1]-angle[j][1])<3.14 && (angle[z][1]<angle[k][1] && angle[z][1]>angle[j][1]) && first_if){
+									number_of_angles_between++;
+									second_if=false;
+								}
+								if((angle[k][1]-angle[j][1])>3.14 && (angle[z][1]>angle[k][1] || angle[z][1]<angle[j][1]) && second_if){
+									number_of_angles_between++;
+									first_if=false;
+								}
+							}
+						}
+						if(number_of_angles_between==(vertices[0][0]-3)){
+							angle[0][0]=angle[j][0];
+							angle[0][1]=angle[j][1];
+							angle[(int)vertices[0][0]-2][0]=angle[k][0];
+							angle[(int)vertices[0][0]-2][1]=angle[k][1];
+							break_var=true;
+						}
+						number_of_angles_between=0;
+						if(break_var)
+							break;
 					}
-					if()
-				}
-				for(int j=0;j<vertices[0][0]-1;j++){
-					cout<<angle[j][0]<<" "<<angle[j][1]<<endl;
+					if(break_var)
+						break;
 				}
 				if(i>=2)
 					if(list[i-2].x==vertices[(int)angle[0][0]][0] && list[i-2].y==vertices[(int)angle[0][0]][1]){
@@ -290,16 +304,11 @@ using Eigen::MatrixXd;
 					list[i].x=vertices[(int)angle[0][0]][0];
 					list[i].y=vertices[(int)angle[0][0]][1];
 				}
-				cout<<vertices[(int)angle[0][0]][0]<<" ________________________ "<<vertices[(int)angle[0][0]][1]<<endl;
 
-				cout<<vertices[(int)angle[(int)vertices[0][0]-2][0]][0]<<" ______________________ "<<vertices[(int)angle[(int)vertices[0][0]-2][0]][1]<<endl;
-
-			}
-			for(int i=0;i<vertices[0][0];i++)
-				cout<<list[i].x<<" "<<list[i].y<<endl;		
+			}		
 
 			for(int i=0;i<vertices[0][0];i++){
-				line(image,list[i],list[(i+1)%(int)vertices[0][0]],(255,255,255),3);
+				line(image,list[i],list[(i+1)%(int)vertices[0][0]],(255,255,255),1);
 			}
 		}
 
@@ -314,10 +323,10 @@ using Eigen::MatrixXd;
 			Point pt2((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)+stod(size.y_size)/2.0)/scale);
 			Point pt3((stod(pose.x)+stod(size.x_size)/2.0)/scale,(stod(pose.y)-stod(size.y_size)/2.0)/scale);
 
-			line(image, pt0,pt1,(255,255,255),3);
-			line(image, pt1,pt3,(255,255,255),3);		
-			line(image, pt3,pt2,(255,255,255),3);
-			line(image, pt2,pt0,(255,255,255),3);
+			line(image, pt0,pt1,(255,255,255),1);
+			line(image, pt1,pt3,(255,255,255),1);		
+			line(image, pt3,pt2,(255,255,255),1);
+			line(image, pt2,pt0,(255,255,255),1);
 		}	
 
 	}
@@ -347,6 +356,56 @@ using Eigen::MatrixXd;
 		Point center((stod(pose.x)/scale,stod(pose.y)/scale));
 
 		circle(image,center,stod(radius)/scale,(0,255,0),2);
+
+	}
+
+	void Mesh::put_map(cv::Mat &image,double scale,char* filepath){
+		char* whole_line=new char[200];
+		ifstream* infile;
+		infile.open(caster(*filepath));
+		Point three_points[3];
+		bool start_flag=true;
+		int count_of_vertexes=0;
+
+		while(!infile.eof()){
+
+
+				infile.getline(whole_line,100);
+				char** line_disected=string_parser(whole_line,10);
+
+				if(compare_string_with_ptrtochar("vertex",line_disected[0])){
+
+					double x=(stod(line_disected[1])+stod(pose_string[0]))/scale;
+					double y=(stod(line_disected[2])+stod(pose_string[1]))/scale;
+					double z=(stod(line_disected[3])+stod(pose_string[2]))/scale;
+
+					x=x+image.rows/2.0;
+					y=y+image.cols/2.0;
+
+					double* array_to_send=new double[3];
+					array_to_send[0]=x;
+					array_to_send[1]=y;
+					array_to_send[2]=z;
+
+					for(int q=0;q<3;q++){
+						array_to_send[q]=pointTransform(array_to_send)[q];
+					}
+
+					three_points[count_of_vertexes].x=x;
+					three_points[count_of_vertexes].y=y;
+					count_of_vertexes++;
+
+					if(count_of_vertexes==3){
+						
+						for(int q=0;q<3;q++){
+							line(image,three_points[q],three_points[(q+1)%3],(255,255,255),1);
+						}
+						count_of_vertexes=0;						
+					}
+
+				}
+
+			}
 
 	}
 

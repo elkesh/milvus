@@ -74,6 +74,7 @@ void generator(double rows, double colms,double scale,Mat &image){
 			add_model(xmlDoc,model,pWorld,caster(pose));
 			generate_map(model,caster(pose),image,scale);
 
+
 		}	
 
 		
@@ -89,8 +90,6 @@ void generator(double rows, double colms,double scale,Mat &image){
     sun->InsertEndChild(sun_uri);
 
     XMLError eResult = xmlDoc.SaveFile("generated_world.world");
-
-    
 
 
 }

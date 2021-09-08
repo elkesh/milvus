@@ -43,6 +43,7 @@ int main(){
     generator((double)rows, (double)cols,scale,image);
 
     flip(image,image,0);
+    cout<<"no segfault"<<endl;
     for(int i=0;i<rows;i++){
 
         image.at<Vec3b>(i,cols/2)=Vec3b(0,0,255);
