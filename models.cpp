@@ -4,6 +4,9 @@
 #include <Eigen/Dense>
 #include <boost/geometry/geometries/segment.hpp>
 #include <boost/geometry/algorithms/intersection.hpp>
+#include <fstream>
+#include "xml_interface.hpp"
+#include "map_generator.hpp"
 
 namespace bg=boost::geometry;
 using Eigen::MatrixXd;
@@ -188,19 +191,13 @@ using Eigen::MatrixXd;
 
 			double** vertices=find_disection_vertexes(new_coord,0);
 
-			for(int i=1;i<vertices[0][0]+1;i++){
-
-				
+			for(int i=1;i<vertices[0][0]+1;i++){				
 				vertices[i][0]=coord_scale_change(scale,vertices[i][0]);
 				vertices[i][1]=coord_scale_change(scale,vertices[i][1]);
 				vertices[i][0]=(int)image_world_transform(colm,vertices[i][0]);
-				vertices[i][1]=(int)image_world_transform(row,vertices[i][1]);
-				
+				vertices[i][1]=(int)image_world_transform(row,vertices[i][1]);				
 			}
-			bool break_flag=false;
-
-			
-			
+			bool break_flag=false;			
 
 			for(int i=1;i<vertices[0][0]+1;i++)
 				cout<<vertices[i][0]<<" "<<vertices[i][1]<<endl;
@@ -358,54 +355,70 @@ using Eigen::MatrixXd;
 		circle(image,center,stod(radius)/scale,(0,255,0),2);
 
 	}
+	Mesh::Mesh(string x,string y,string z,string roll,
+		string pitch,string yaw)
+		: Shapes(x,y,z,roll,pitch,yaw)
+		{
+		}
 
-	void Mesh::put_map(cv::Mat &image,double scale,char* filepath){
+	void Mesh::put_map(cv::Mat &image,double scale,string filepath){
+		int row=image.rows;
+		int colm=image.cols;
+
 		char* whole_line=new char[200];
-		ifstream* infile;
-		infile.open(caster(*filepath));
+		ifstream infile;
+		infile.open(caster(filepath));
 		Point three_points[3];
 		bool start_flag=true;
 		int count_of_vertexes=0;
 
 		while(!infile.eof()){
 
+			infile.getline(whole_line,100);
+			char** line_disected=string_parser(whole_line,10);
 
-				infile.getline(whole_line,100);
-				char** line_disected=string_parser(whole_line,10);
+			if(compare_string_with_ptrtochar("vertex",line_disected[0])){
 
-				if(compare_string_with_ptrtochar("vertex",line_disected[0])){
+				double x=stod(line_disected[1]);
+				double y=stod(line_disected[2]);
+				double z=stod(line_disected[3]);
 
-					double x=(stod(line_disected[1])+stod(pose_string[0]))/scale;
-					double y=(stod(line_disected[2])+stod(pose_string[1]))/scale;
-					double z=(stod(line_disected[3])+stod(pose_string[2]))/scale;
-
-					x=x+image.rows/2.0;
-					y=y+image.cols/2.0;
-
-					double* array_to_send=new double[3];
-					array_to_send[0]=x;
-					array_to_send[1]=y;
-					array_to_send[2]=z;
-
-					for(int q=0;q<3;q++){
-						array_to_send[q]=pointTransform(array_to_send)[q];
-					}
-
-					three_points[count_of_vertexes].x=x;
-					three_points[count_of_vertexes].y=y;
-					count_of_vertexes++;
-
-					if(count_of_vertexes==3){
-						
-						for(int q=0;q<3;q++){
-							line(image,three_points[q],three_points[(q+1)%3],(255,255,255),1);
-						}
-						count_of_vertexes=0;						
-					}
-
+				double* array_to_send=new double[3];
+				array_to_send[0]=x;
+				array_to_send[1]=y;
+				array_to_send[2]=z;
+				cout<<x<<" "<<y;
+				double array_to_return[3];
+				for(int q=0;q<3;q++){
+					array_to_return[q]=pointTransform(array_to_send)[q];
+				}
+				cout<<"after: "<<array_to_send[0]<<" "<<array_to_send[1]<<endl;
+				for(int q=0;q<3;q++){
+					array_to_return[q]=coord_scale_change(scale,array_to_return[q]);
+					if(q==0)
+						array_to_return[q]=(int)image_world_transform(colm,array_to_return[q]);
+					else if(q==1)
+						array_to_return[q]=(int)image_world_transform(row,array_to_return[q]);
 				}
 
-			}
+				three_points[count_of_vertexes].x=array_to_return[0];
+				three_points[count_of_vertexes].y=array_to_return[1];
+				count_of_vertexes++;
 
+				if(count_of_vertexes==3){
+					
+					for(int q=0;q<3;q++){
+						line(image,three_points[q],three_points[(q+1)%3],(255,255,255),1);
+					}
+					count_of_vertexes=0;						
+				}
+			}
+		}
 	}
+
+				
+
+		
+
+
 

@@ -190,7 +190,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			Mesh mesh_model=Mesh(pose_string[0],pose_string[1],pose_string[2],
 			pose_string[3],pose_string[4],pose_string[5]);
 
-			mesh_model.put_map(filepath)
+			mesh_model.put_map(image,scale,filepath);
 /*
 			while(!infile.eof()){
 
