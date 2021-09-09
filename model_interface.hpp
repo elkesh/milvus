@@ -76,3 +76,11 @@ public:
 
 
 };
+
+class Mesh : public Shapes{
+public:
+	Mesh(string x="0",string y="0",string z="0",string pitch="0",
+		string yaw="0",string roll="0");
+
+	void put_map(cv::Mat &image,double,string filepath);
+};
