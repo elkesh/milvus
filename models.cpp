@@ -29,20 +29,14 @@ using Eigen::MatrixXd;
 	Box::Box(string x,string y,string z,string roll,
 		string pitch,string yaw,string x2,string y2,string z2)
 		: size(x2,y2,z2),Shapes(x,y,z,roll,pitch,yaw)
-		{
-		}
+		{}
 	
 	double Shapes::image_world_transform(int number_of_row_column,double x_or_y){//0 if row , 1 if column
-
 		double last_coord=number_of_row_column/2.0+x_or_y;
-
 		return last_coord;
-
 	}
 	double Shapes::coord_scale_change(double scale,double crd){
-
 		return crd/scale;
-
 	}
 	double* Shapes::pointTransform(double* coordinate){
 
@@ -87,11 +81,8 @@ using Eigen::MatrixXd;
 			new_point[2]=result(2,0);
 
 			return new_point;
-
-
 	}
 	double** Box::find_disection_vertexes(double** coordinates,double height){
-
 		int under=0;
 		for(int i=0;i<8;i++){
 			if(coordinates[i][2]<height){
@@ -99,7 +90,6 @@ using Eigen::MatrixXd;
 			}
 		}
 		int under_array[under];
-
 		int j=0;
 		for(int i=0;i<8;i++){
 			if(coordinates[i][2]<height){
@@ -107,7 +97,6 @@ using Eigen::MatrixXd;
 				j++;
 			}
 		}
-
 		double** return_vertices=new double*[8];//8 yerine max sayıyı koy.
 		return_vertices[0]=new double[1];
 		int return_index=1;
@@ -117,7 +106,6 @@ using Eigen::MatrixXd;
 			for(int j=0;j<8;j++){
 
 				int difference=0;
-
 				bool cond1=(j%8<4 && under_array[i]%8<4)||(j%8>=4 && under_array[i]%8>=4);
 				bool cond2=(j%4<2 && under_array[i]%4<2)||(j%4>=2 && under_array[i]%4>=2);
 				bool cond3=(j%2<1 && under_array[i]%2<1)||(j%2>=1 && under_array[i]%2>=1);
@@ -148,7 +136,6 @@ using Eigen::MatrixXd;
 	return_vertices[0][0]=return_index-1;
 	return_vertices[return_index]=new double[1];
 	return_vertices[return_index][0]=-1;
-
 	return return_vertices;
 
 	}
@@ -157,9 +144,7 @@ using Eigen::MatrixXd;
 
 		int row=image.rows;
 		int colm=image.cols;		
-
 		double** coord=new double*[8];
-
 		if(!flag_from_image){
 
 			for(int i=0;i<8;i++){
@@ -181,16 +166,13 @@ using Eigen::MatrixXd;
 
 			}
 			double** new_coord=new double*[8];
-
 			for(int i=0;i<8;i++){
 				new_coord[i]=new double[3];
 				for(int j=0;j<3;j++){
 					new_coord[i][j]=pointTransform(coord[i])[j];
 				}
 			}
-
 			double** vertices=find_disection_vertexes(new_coord,0);
-
 			for(int i=1;i<vertices[0][0]+1;i++){				
 				vertices[i][0]=coord_scale_change(scale,vertices[i][0]);
 				vertices[i][1]=coord_scale_change(scale,vertices[i][1]);
@@ -216,18 +198,13 @@ using Eigen::MatrixXd;
 
 					if(list[i-1].x==vertices[j][0] && list[i-1].y==vertices[j][1])
 						continue;
-
-					angle[angle_index][0]=j;
-					
+					angle[angle_index][0]=j;					
 					double cosine=(vertices[j][0]-list[i-1].x)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
 					double sine=(vertices[j][1]-list[i-1].y)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
 					if(asin(sine)<0){
 						angle[angle_index][1]=2*3.14-acos(cosine);
 					}else
 						angle[angle_index][1]=acos(cosine);
-					/*
-					if(angle[angle_index][1]>=3.14)
-						angle[angle_index][1]=angle[angle_index][1]-2*3.14;*/
 					angle_index++;
 				}
 				for(int j=0;j<vertices[0][0]-2;j++){
@@ -301,17 +278,11 @@ using Eigen::MatrixXd;
 					list[i].x=vertices[(int)angle[0][0]][0];
 					list[i].y=vertices[(int)angle[0][0]][1];
 				}
-
-			}		
-
+			}
 			for(int i=0;i<vertices[0][0];i++){
 				line(image,list[i],list[(i+1)%(int)vertices[0][0]],(255,255,255),1);
 			}
 		}
-
-
-		
-	
 
 		if(flag_from_image){
 		
@@ -325,21 +296,31 @@ using Eigen::MatrixXd;
 			line(image, pt3,pt2,(255,255,255),1);
 			line(image, pt2,pt0,(255,255,255),1);
 		}	
-
 	}
-
 
 	Sphere::Sphere(string x,string y,string z,string pitch,string yaw,string roll,
 		string r)
 		:radius(r),Shapes(x,y,z,pitch,yaw,roll)
 		{}
 
-	void Sphere::put_map(cv::Mat &image,double scale){
+	void Sphere::put_map(cv::Mat &image,double scale,double height){
 
-		Point center(stod(pose.x)/scale,stod(pose.y)/scale);
+		int row=image.rows;
+		int colm=image.cols;
 
-		circle(image,center,stod(radius)/scale,(0,255,0),2);
-
+		Point center(image_world_transform(colm,coord_scale_change(scale,stod(pose.x))),image_world_transform(row,coord_scale_change(scale,stod(pose.y))));
+		double difference=abs(stod(pose.z)-height);
+		double small_r;
+		cout<<difference<<endl;
+		cout<<pose.z<<endl;
+		cout<<radius<<endl;
+		if(difference<stod(radius)){
+			cout<<"yes"<<endl;
+			small_r=sqrt(pow(stod(radius),2)-pow(difference,2));
+			cout<<small_r/scale<<endl;
+			cout<<center<<endl;
+			circle(image,center,small_r/scale,(255,255,255),2);
+		}
 	}
 
 
@@ -361,7 +342,7 @@ using Eigen::MatrixXd;
 		{
 		}
 
-	void Mesh::put_map(cv::Mat &image,double scale,string filepath){
+	void Mesh::put_map(cv::Mat &image,double scale,string filepath,double height){
 		int row=image.rows;
 		int colm=image.cols;
 
@@ -369,6 +350,7 @@ using Eigen::MatrixXd;
 		ifstream infile;
 		infile.open(caster(filepath));
 		Point three_points[3];
+		//double z_pose[3];
 		bool start_flag=true;
 		int count_of_vertexes=0;
 
@@ -387,26 +369,34 @@ using Eigen::MatrixXd;
 				array_to_send[0]=x;
 				array_to_send[1]=y;
 				array_to_send[2]=z;
-				cout<<x<<" "<<y;
 				double array_to_return[3];
 				for(int q=0;q<3;q++){
 					array_to_return[q]=pointTransform(array_to_send)[q];
 				}
-				cout<<"after: "<<array_to_send[0]<<" "<<array_to_send[1]<<endl;
-				for(int q=0;q<3;q++){
+				
+				for(int q=0;q<2;q++){
 					array_to_return[q]=coord_scale_change(scale,array_to_return[q]);
 					if(q==0)
 						array_to_return[q]=(int)image_world_transform(colm,array_to_return[q]);
 					else if(q==1)
 						array_to_return[q]=(int)image_world_transform(row,array_to_return[q]);
 				}
-
+				//z_pose[count_of_vertexes]=array_to_return[2];
 				three_points[count_of_vertexes].x=array_to_return[0];
 				three_points[count_of_vertexes].y=array_to_return[1];
 				count_of_vertexes++;
 
-				if(count_of_vertexes==3){
-					
+				//bool under=false;
+				//bool over=false;
+
+				if(count_of_vertexes==3){/*
+					for(int q=0;q<3;q++){
+						if(z_pose[q]>height)
+							bool over=true;
+						else
+							bool under=true;
+					}
+					if(over && under)*/
 					for(int q=0;q<3;q++){
 						line(image,three_points[q],three_points[(q+1)%3],(255,255,255),1);
 					}

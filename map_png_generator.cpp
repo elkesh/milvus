@@ -140,7 +140,8 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			Sphere new_sphere=Sphere(pose_string[0],pose_string[1],pose_string[2],
 			pose_string[3],pose_string[4],pose_string[5],radius_string[0]);
 
-			new_sphere.put_map(image,1);
+			new_sphere.put_map(image,scale,0);
+			cout<<"uras alkas"<<endl;
 
 		}else if(compare_string_with_ptrtochar("cylinder",geo->FirstChildElement()->Name())){//cylinder
 
@@ -190,7 +191,7 @@ void generate_map(string model, const char* pose,Mat &image,double scale){
 			Mesh mesh_model=Mesh(pose_string[0],pose_string[1],pose_string[2],
 			pose_string[3],pose_string[4],pose_string[5]);
 
-			mesh_model.put_map(image,scale,filepath);
+			mesh_model.put_map(image,scale,filepath,0.21);
 /*
 			while(!infile.eof()){
 
