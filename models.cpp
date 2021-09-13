@@ -331,9 +331,9 @@ using Eigen::MatrixXd;
 
 	void Cylinder::put_map(cv::Mat &image,double scale){
 
-		Point center((stod(pose.x)/scale,stod(pose.y)/scale));
+		Point 
 
-		circle(image,center,stod(radius)/scale,(0,255,0),2);
+		
 
 	}
 	Mesh::Mesh(string x,string y,string z,string roll,
@@ -346,7 +346,7 @@ using Eigen::MatrixXd;
 		int row=image.rows;
 		int colm=image.cols;
 
-		char* whole_line=new char[200];
+	 	char* whole_line=new char[200];
 		ifstream infile;
 		infile.open(caster(filepath));
 		Point three_points[3];

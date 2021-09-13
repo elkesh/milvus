@@ -8,19 +8,60 @@
 using namespace tinyxml2;
 using namespace std;
 using namespace cv;
-/*
-static void onMouse(int event, int x, int y, int flags, void* param) // now it's in param
-{
-    Mat &xyz = *((Mat*)param); //cast and deref the param
 
-    if (event == EVENT_LBUTTONDOWN)
-    {
-        short val = xyz.at< short >(y,x); // opencv is row-major ! 
-        cout << "x= " << x << " y= " << y << "val= "<<val<< endl;
+vector<double> gauss(vector< vector<double> > A) {
+    int n = A.size();
+
+    for (int i=0; i<n; i++) {
+        // Search for maximum in this column
+        double maxEl = abs(A[i][i]);
+        int maxRow = i;
+        for (int k=i+1; k<n; k++) {
+            if (abs(A[k][i]) > maxEl) {
+                maxEl = abs(A[k][i]);
+                maxRow = k;
+            }
+        }
+
+        // Swap maximum row with current row (column by column)
+        for (int k=i; k<n+1;k++) {
+            double tmp = A[maxRow][k];
+            A[maxRow][k] = A[i][k];
+            A[i][k] = tmp;
+        }
+
+        // Make all rows below this one 0 in current column
+        for (int k=i+1; k<n; k++) {
+            double c = -A[k][i]/A[i][i];
+            for (int j=i; j<n+1; j++) {
+                if (i==j) {
+                    A[k][j] = 0;
+                } else {
+                    A[k][j] += c * A[i][j];
+                }
+            }
+        }
     }
+    // Solve equation Ax=b for an upper triangular matrix A
+    vector<double> x(n);
+    for (int i=n-1; i>=0; i--) {
+        x[i] = A[i][n]/A[i][i];
+        for (int k=i-1;k>=0; k--) {
+            A[k][n] -= A[k][i] * x[i];
+        }
+    }
+    return x;
 }
-*/
+
 int main(){
+/*sil!!!!!!!!!!!!!!!!!!!!!!
+    vector<double> line(3);
+    vector< vector<double> > A(2,line);
+    A[0][0]=1;A[0][1]=2;A[0][2]=0;
+    A[1][0]=2;A[1][1]=-2;A[1][2]=6;
+    vector<double>x(2);x=gauss(A);
+    cout<<x[0]<<"  "<<x[1]<<endl;*/
+
     
     cv::Mat image;
     cv::Mat binary_image;
