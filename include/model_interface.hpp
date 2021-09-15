@@ -1,31 +1,27 @@
 #include <iostream>
 #include <opencv2/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
-
-using namespace cv;
-using namespace std;
-
 class Shapes{
 
 public:
-	struct basic_pose{
-		string x;
-	    string y;
-	    string z;
-	    string pitch;
-	    string yaw;
-	    string roll;
+  struct basic_pose{
+      std::string x;
+      std::string y;
+      std::string z;
+      std::string pitch;
+      std::string yaw;
+      std::string roll;
 
-	    basic_pose(string x="0",string y="0",string z="0",string roll="0"
-	    ,string pitch="0",string yaw="0");
+      basic_pose(std::string x="0",std::string y="0",std::string z="0",std::string roll="0"
+      ,std::string pitch="0",std::string yaw="0");
 
-	};
-	basic_pose pose;
+  };
+  basic_pose pose;
 
-	Shapes(string x,string y,string z,string roll,string pitch,string yaw);
-	double image_world_transform(int number_of_row_column,double x_or_y);
-	double* pointTransform(double* coordinate);
-	double coord_scale_change(double scale,double crd);
+  Shapes(std::string x,std::string y,std::string z,std::string roll,std::string pitch,std::string yaw);
+  double image_world_transform(int number_of_row_column,double x_or_y);
+  double* pointTransform(double* coordinate);
+  double coord_scale_change(double scale,double crd);
 
 };
 
@@ -33,54 +29,54 @@ class Box : public Shapes{
 
 public:
 
-	struct basic_size{
+  struct basic_size{
 
-		string x_size;
-		string y_size;
-		string z_size;
+    std::string x_size;
+    std::string y_size;
+    std::string z_size;
 
-		basic_size(string x="0",string y="0",string z="0");
+    basic_size(std::string x="0",std::string y="0",std::string z="0");
 
-	};
-	basic_size size;
+  };
+  basic_size size;
 
-	Box(string x="0",string y="0",string z="0",string roll="0",
-		string pitch="0",string yaw="0", string x2="0",string y2="0",string z2="0");
+  Box(std::string x="0",std::string y="0",std::string z="0",std::string roll="0",
+    std::string pitch="0",std::string yaw="0", std::string x2="0",std::string y2="0",std::string z2="0");
 
-	void put_map(cv::Mat &image,double,bool);
-	double** find_disection_vertexes(double** coordinates,double height);
+  void put_map(cv::Mat &image,double,bool);
+  double** find_disection_vertexes(double** coordinates,double height);
 };
 
 class Sphere : public Shapes{
 
 public:
 
-	string radius;
+  std::string radius;
 
-	Sphere(string x="0",string y="0",string z="0",string pitch="0",
-		string yaw="0",string roll="0",string r="0");
+  Sphere(std::string x="0",std::string y="0",std::string z="0",std::string pitch="0",
+    std::string yaw="0",std::string roll="0",std::string r="0");
 
-	void put_map(cv::Mat &image,double,double height);
+  void put_map(cv::Mat &image,double,double height);
 };
 
 class Cylinder : public Shapes{
 public:
 
-	string height;
-	string radius;
+  std::string height;
+  std::string radius;
 
-	Cylinder(string x="0",string y="0",string z="0",string pitch="0",
-		string yaw="0",string roll="0",string h="0",string r="0");
+  Cylinder(std::string x="0",std::string y="0",std::string z="0",std::string pitch="0",
+    std::string yaw="0",std::string roll="0",std::string h="0",std::string r="0");
 
-	void put_map(cv::Mat &image,double);
+  void put_map(cv::Mat &image,double);
 
 
 };
 
 class Mesh : public Shapes{
 public:
-	Mesh(string x="0",string y="0",string z="0",string pitch="0",
-		string yaw="0",string roll="0");
+  Mesh(std::string x="0",std::string y="0",std::string z="0",std::string pitch="0",
+    std::string yaw="0",std::string roll="0");
 
-	void put_map(cv::Mat &image,double,string filepath,double height);
+  void put_map(cv::Mat &image,double,std::string filepath,double height);
 };
