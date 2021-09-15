@@ -142,4 +142,4 @@ void parser_func(int** rectangles,double scale,cv::Mat &image)
   } 
 
   tinyxml2::XMLError eResult = xmlDoc.SaveFile("new_model/model.sdf");
-}<br />
+}
