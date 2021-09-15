@@ -1,15 +1,15 @@
 #include<opencv2/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
 #include <iostream>
-#include "rectangles_interface.hpp"
-#include "xml_interface.hpp"
-#include "world_interface.hpp"
-#include "tinyxml2.h"
-using namespace tinyxml2;
-using namespace std;
-using namespace cv;
+#include "../include/rectangles_interface.hpp"
+#include "../include/xml_interface.hpp"
+#include "../include/world_interface.hpp"
+#include "../tinyxml2.h"
 
-vector<double> gauss(vector< vector<double> > A) {
+
+//using namespace cv;
+
+std::vector<double> gauss(std::vector< std::vector<double> > A) {
     int n = A.size();
 
     for (int i=0; i<n; i++) {
@@ -22,14 +22,12 @@ vector<double> gauss(vector< vector<double> > A) {
                 maxRow = k;
             }
         }
-
         // Swap maximum row with current row (column by column)
         for (int k=i; k<n+1;k++) {
             double tmp = A[maxRow][k];
             A[maxRow][k] = A[i][k];
             A[i][k] = tmp;
         }
-
         // Make all rows below this one 0 in current column
         for (int k=i+1; k<n; k++) {
             double c = -A[k][i]/A[i][i];
@@ -43,7 +41,7 @@ vector<double> gauss(vector< vector<double> > A) {
         }
     }
     // Solve equation Ax=b for an upper triangular matrix A
-    vector<double> x(n);
+    std::vector<double> x(n);
     for (int i=n-1; i>=0; i--) {
         x[i] = A[i][n]/A[i][i];
         for (int k=i-1;k>=0; k--) {
@@ -60,12 +58,10 @@ int main(){
     A[0][0]=1;A[0][1]=2;A[0][2]=0;
     A[1][0]=2;A[1][1]=-2;A[1][2]=6;
     vector<double>x(2);x=gauss(A);
-    cout<<x[0]<<"  "<<x[1]<<endl;*/
-
-    
+    cout<<x[0]<<"  "<<x[1]<<endl;*/    
     cv::Mat image;
     cv::Mat binary_image;
-    image = cv::imread("deneme.jpg");
+    image = cv::imread("../deneme.jpg");
 
     flip(image,image,0);
     int rows = image.rows;
@@ -74,8 +70,8 @@ int main(){
     threshold(image,binary_image,100,255,CV_THRESH_BINARY);
 
     double scale;
-    cout<<"Enter the scale between the image and simulation world scale(meter per pixel)"<<endl;
-    cin>>scale;
+    std::cout<<"Enter the scale between the image and simulation world scale(meter per pixel)"<<std::endl;
+    std::cin>>scale;
 
     int **ptr_to_rect=generate_borders(binary_image);
     
@@ -84,19 +80,16 @@ int main(){
     generator((double)rows, (double)cols,scale,image);
 
     flip(image,image,0);
-    cout<<"no segfault"<<endl;
+
     for(int i=0;i<rows;i++){
 
-        image.at<Vec3b>(i,cols/2)=Vec3b(0,0,255);
+        image.at<cv::Vec3b>(i,cols/2)=cv::Vec3b(0,0,255);
 
     }for(int i=0;i<cols;i++){
 
-        image.at<Vec3b>(rows/2,i)=Vec3b(0,0,255);
+        image.at<cv::Vec3b>(rows/2,i)=cv::Vec3b(0,0,255);
     }
-    imshow("uras",image);
-    waitKey(0);
     imwrite("result.jpg",image);
 
-    
     return 0;
 }

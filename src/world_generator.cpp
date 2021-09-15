@@ -1,95 +1,74 @@
 #include <iostream>
-#include "xml_interface.hpp"
+#include "../include/xml_interface.hpp"
 #include "tinyxml2.h"
-#include "world_interface.hpp"
+#include "../include/world_interface.hpp"
 #include <string>
-#include "map_generator.hpp"
-using namespace std;
-using namespace tinyxml2;
+#include "../include/map_generator.hpp"
 
 
-void add_model(XMLDocument &doc,string model_name,XMLElement *world, const char* pose){
 
-	XMLElement *terrain = doc.NewElement("include");
+
+void add_model(tinyxml2::XMLDocument &doc,std::string model_name,tinyxml2::XMLElement *world, const char* pose){
+
+  tinyxml2::XMLElement *terrain = doc.NewElement("include");
     world->InsertEndChild(terrain);
 
-    XMLElement *terrain_uri = doc.NewElement("uri");
+    tinyxml2::XMLElement *terrain_uri = doc.NewElement("uri");
     terrain_uri->SetText(caster("model://"+model_name));
     terrain->InsertEndChild(terrain_uri);
 
-    XMLElement *pPose = doc.NewElement("pose");
+    tinyxml2::XMLElement *pPose = doc.NewElement("pose");
     pPose->SetText(pose);
     terrain->InsertEndChild(pPose);
-
-
 }
 
-void generator(double rows, double colms,double scale,Mat &image){
+void generator(double rows, double colms,double scale,cv::Mat &image){
+    tinyxml2::XMLDocument xmlDoc;
 
-	XMLDocument xmlDoc;
-
-	XMLDeclaration* declaration=xmlDoc.NewDeclaration();
+    tinyxml2::XMLDeclaration* declaration=xmlDoc.NewDeclaration();
     xmlDoc.InsertFirstChild(declaration);
 
-    XMLElement *sdfversion = xmlDoc.NewElement("sdf");
+    tinyxml2::XMLElement *sdfversion = xmlDoc.NewElement("sdf");
     sdfversion->SetAttribute("version","1.5");
     xmlDoc.InsertEndChild(sdfversion);
 
-    XMLElement *pWorld = xmlDoc.NewElement("world");
+    tinyxml2::XMLElement *pWorld = xmlDoc.NewElement("world");
     pWorld->SetAttribute("name","default");
     sdfversion->InsertEndChild(pWorld);
 
-    string walls_x;
-    string walls_y;
+    std::string walls_x;
+    std::string walls_y;
 
-    walls_y=to_string(-(rows/2)*scale);
-    walls_x=to_string(-(colms/2)*scale);
+    walls_y=std::to_string(-(rows/2)*scale);
+    walls_x=std::to_string(-(colms/2)*scale);
 
     add_model(xmlDoc,"new_model",pWorld,caster(walls_x+" "+walls_y+" 0 0 0 0"));
+  
+  std::string model;
+  std::string pose;
+  
+  getline(std::cin,model);
+  while(1){
+    std::cout<<"give the name and position of the models that you want to generate inside the world."<<std::endl;
+    std::cout<<"give the name press enter for next one. enter q to quit."<<std::endl;        
+    getline(std::cin,model);
+    if(model=="q")
+      break;
+    else{
 
-	
-	string model;
-	string pose;
-	
-	getline(cin,model);
-
-
-	while(1){
-
-		cout<<"give the name and position of the models that you want to generate inside the world."<<endl;
-		cout<<"give the name press enter for next one. enter q to quit."<<endl;
-
-				
-		getline(cin,model);
-		
-		
-
-		if(model=="q")
-			break;
-		else{
-
-			cout<<"give the position of the model relative to the origin of the world"<<endl;
-			
-			getline(cin,pose);
-			add_model(xmlDoc,model,pWorld,caster(pose));
-			generate_map(model,caster(pose),image,scale);
-
-
-		}	
-
-		
-
-	}
-
-	
-	XMLElement *sun = xmlDoc.NewElement("include");
+      std::cout<<"give the position of the model relative to the origin of the world"<<std::endl;
+      
+      getline(std::cin,pose);
+      add_model(xmlDoc,model,pWorld,caster(pose));
+      generate_map(model,caster(pose),image,scale);
+    } 
+  }  
+    tinyxml2::XMLElement *sun = xmlDoc.NewElement("include");
     pWorld->InsertEndChild(sun);
 
-    XMLElement *sun_uri= xmlDoc.NewElement("uri");
+    tinyxml2::XMLElement *sun_uri= xmlDoc.NewElement("uri");
     sun_uri->SetText("model://sun");
     sun->InsertEndChild(sun_uri);
 
-    XMLError eResult = xmlDoc.SaveFile("generated_world.world");
-
-
+    tinyxml2::XMLError eResult = xmlDoc.SaveFile("generated_world.world");
 }
