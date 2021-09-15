@@ -3,15 +3,11 @@
     <world name="default">
         <include>
             <uri>model://new_model</uri>
-            <pose>-20.000000 -15.000000 0 0 0 0</pose>
+            <pose>-4.000000 -3.000000 0 0 0 0</pose>
         </include>
         <include>
             <uri>model://box_model</uri>
             <pose>0 0 0 0 0 0</pose>
-        </include>
-        <include>
-            <uri>model://box_model</uri>
-            <pose>-400 -300 0 0 0 0</pose>
         </include>
         <include>
             <uri>model://sun</uri>
