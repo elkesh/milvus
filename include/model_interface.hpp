@@ -66,9 +66,9 @@ public:
   std::string radius;
 
   Cylinder(std::string x="0",std::string y="0",std::string z="0",std::string pitch="0",
-    std::string yaw="0",std::string roll="0",std::string h="0",std::string r="0");
+    std::string yaw="0",std::string roll="0",std::string r="0",std::string h="0");
 
-  void put_map(cv::Mat &image,double);
+  void put_map(cv::Mat &image,double,double);
 
 
 };

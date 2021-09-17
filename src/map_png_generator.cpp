@@ -149,7 +149,7 @@ void generate_map(std::string model, const char* pose,cv::Mat &image,double scal
       pose_string[3],pose_string[4],pose_string[5],radius_string[0]
       ,height_string[0]);
 
-      new_cylinder.put_map(image,1);
+      new_cylinder.put_map(image,scale,0);
     }else if(compare_string_with_ptrtochar("mesh",geo->FirstChildElement()->Name())){
       
       tinyxml2::XMLElement* uri=xml_iterator("uri",geo->FirstChildElement());

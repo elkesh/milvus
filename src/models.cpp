@@ -7,6 +7,8 @@
 #include <fstream>
 #include "../include/xml_interface.hpp"
 #include "../include/map_generator.hpp"
+#define PI 3.14159265
+
 
   Shapes::Shapes(std::string x="0",std::string y="0",std::string z="0",std::string roll="0",std::string pitch="0",std::string yaw="0")
   : pose(x,y,z,roll,pitch,yaw)
@@ -191,7 +193,7 @@
           double cosine=(vertices[j][0]-list[i-1].x)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
           double sine=(vertices[j][1]-list[i-1].y)/sqrt(pow(list[i-1].x-vertices[j][0],2)+pow(list[i-1].y-vertices[j][1],2));
           if(asin(sine)<0){
-            angle[angle_index][1]=2*3.14-acos(cosine);
+            angle[angle_index][1]=2*PI-acos(cosine);
           }else
             angle[angle_index][1]=acos(cosine);
           angle_index++;
@@ -221,21 +223,21 @@
               if(z==j || z==k)
                 continue;
               if(angle[j][1]>angle[k][1]){
-                if((angle[j][1]-angle[k][1])<3.14 && (angle[z][1]<angle[j][1] && angle[z][1]>angle[k][1]) && first_if){
+                if((angle[j][1]-angle[k][1])<PI && (angle[z][1]<angle[j][1] && angle[z][1]>angle[k][1]) && first_if){
                   number_of_angles_between++;
                   second_if=false;
                 }
-                if((angle[j][1]-angle[k][1])>3.14 && (angle[z][1]>angle[j][1] || angle[z][1]<angle[k][1]) && second_if){
+                if((angle[j][1]-angle[k][1])>PI && (angle[z][1]>angle[j][1] || angle[z][1]<angle[k][1]) && second_if){
                   number_of_angles_between++;
                   first_if=false;
                 }
               }
               else{
-                if((angle[k][1]-angle[j][1])<3.14 && (angle[z][1]<angle[k][1] && angle[z][1]>angle[j][1]) && first_if){
+                if((angle[k][1]-angle[j][1])<PI && (angle[z][1]<angle[k][1] && angle[z][1]>angle[j][1]) && first_if){
                   number_of_angles_between++;
                   second_if=false;
                 }
-                if((angle[k][1]-angle[j][1])>3.14 && (angle[z][1]>angle[k][1] || angle[z][1]<angle[j][1]) && second_if){
+                if((angle[k][1]-angle[j][1])>PI && (angle[z][1]>angle[k][1] || angle[z][1]<angle[j][1]) && second_if){
                   number_of_angles_between++;
                   first_if=false;
                 }
@@ -309,23 +311,29 @@
     }
   }
   Cylinder::Cylinder(std::string x,std::string y,std::string z,std::string pitch,std::string yaw,std::string roll,
-    std::string h,std::string r)
+    std::string r,std::string h)
     :height(h),radius(r),Shapes(x,y,z,pitch,yaw,roll)
     {}
 
-  void Cylinder::put_map(cv::Mat &image,double scale){
+  void Cylinder::put_map(cv::Mat &image,double scale,double level){
+
+    double* old_top=new double[3];
+    old_top[0]=0;
+    old_top[1]=0;
+    old_top[2]=std::stod(height)/2;
+    double* old_bottom=new double[3];
+    old_bottom[0]=0;
+    old_bottom[1]=0;
+    old_bottom[2]=-std::stod(height)/2;
 
     double* top=new double[3];
-    top[0]=0;
-    top[1]=0;
-    top[2]=stod(height)/2;
     double* bottom=new double[3];
-    bottom[0]=0;
-    bottom[1]=0;
-    bottom[2]=-stod(height)/2;
-
-    top=pointTransform(top);//bura yanlış olabilir
-    bottom=pointTransform(bottom);
+    
+    for(int i=0;i<3;i++){
+      top[i]=pointTransform(old_top)[i];//bura yanlış olabilir
+      bottom[i]=pointTransform(old_bottom)[i];
+    }
+    
     double xy_distance=sqrt(pow(top[0]-bottom[0],2)+pow(top[1]-bottom[1],2));
     double z_diff=top[2]-bottom[2];
     double cosine = xy_distance/(sqrt(pow(xy_distance,2)+pow(z_diff,2)));
@@ -340,28 +348,64 @@
       cosine_theta=0;
       sine_theta=0;
     }
-    std::cout<<cosine_theta<<std::endl;
     if(asin(sine)<0){
-      phi=2*3.14-acos(cosine);
+      phi=2*PI-acos(cosine);
     }else
       phi=acos(cosine);
     if(asin(theta)<0)
-      theta=2*3.14-acos(cosine_theta);
+      theta=2*PI-acos(cosine_theta);
     else
       theta=acos(cosine_theta);
 
-    double heighest_point[3];
+    double highest_point[3];
     double lowest_point[3];
 
-    heighest_point[0]=top[0]+stod(radius)*cos(phi+3.14/2)*cos(theta);
-    lowest_point[0]=top[0]+stod(radius)*cos(phi-3.14/2)*cos(theta);
-    heighest_point[1]=top[1]+stod(radius)*cos(phi+3.14/2)*sin(theta);
-    lowest_point[1]=top[1]+stod(radius)*cos(phi-3.14/2)*sin(theta);
-    heighest_point[2]=top[2]+stod(radius)*sin(phi+3.14/2);
-    lowest_point[2]=top[2]+stod(radius)*sin(phi-3.14/2);
+    highest_point[0]=top[0]+stod(radius)*cos(phi+PI/2)*cos(theta);
+    lowest_point[0]=top[0]+stod(radius)*cos(phi-PI/2)*cos(theta);
+    highest_point[1]=top[1]+stod(radius)*cos(phi+PI/2)*sin(theta);
+    lowest_point[1]=top[1]+stod(radius)*cos(phi-PI/2)*sin(theta);
+    highest_point[2]=top[2]+stod(radius)*sin(phi+PI/2);
+    lowest_point[2]=top[2]+stod(radius)*sin(phi-PI/2);
+    std::cout<<highest_point[0]<<" "<<highest_point[1]<<std::endl;
+
+    double disection_points[3][3];
     
-    std::cout<<theta<<std::endl;
-    std::cout<<heighest_point[0]<<" "<<heighest_point[1]<<std::endl;
+    if(highest_point[2]>level && lowest_point[2]>level){
+      disection_points[0][0]=highest_point[0]-abs(highest_point[2]-level)/(sin(phi)/cos(phi))*cos(theta);
+      disection_points[0][1]=highest_point[1]-abs(highest_point[2]-level)/(sin(phi)/cos(phi))*sin(theta);
+      disection_points[0][2]=level;
+      disection_points[1][0]=lowest_point[0]-abs(lowest_point[2]-level)/(sin(phi)/cos(phi))*cos(theta);
+      disection_points[1][1]=lowest_point[1]-abs(lowest_point[2]-level)/(sin(phi)/cos(phi))*sin(theta);
+      disection_points[1][2]=level;
+    }
+
+    for(int j=0;j<2;j++)
+      for(int k=0;k<2;k++){
+        disection_points[j][k]=coord_scale_change(scale,disection_points[j][k]);
+        if(k==0)
+          disection_points[j][k]=image_world_transform(image.cols,disection_points[j][k]);
+        else
+          disection_points[j][k]=image_world_transform(image.rows,disection_points[j][k]);
+      }
+
+    disection_points[2][0]=(disection_points[0][0]+disection_points[1][0])/2;
+    disection_points[2][1]=(disection_points[0][1]+disection_points[1][1])/2;
+
+    for(int j=0;j<2;j++)
+      for(int k=0;k<2;k++){
+        std::cout<<disection_points[j][k]<<std::endl;
+      }
+
+    double minor=2*stod(radius)/scale;
+    double major=sqrt(pow(disection_points[0][0]-disection_points[1][0],2)
+      +pow(disection_points[0][1]-disection_points[1][1],2));
+    
+
+    cv::Point center(disection_points[2][0],disection_points[2][1]);
+    std::cout<<center<<std::endl;
+    //std::cout<<"center: "<<center<<" major: "<<major<<" minor: "<<minor<<std::endl;
+    cv::Size xy(major,minor);
+    cv::ellipse(image,center,xy,theta,0,360,(255,255,255),1);
   }
   Mesh::Mesh(std::string x,std::string y,std::string z,std::string roll,
     std::string pitch,std::string yaw)

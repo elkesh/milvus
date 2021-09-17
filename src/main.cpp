@@ -89,6 +89,8 @@ int main(){
 
         image.at<cv::Vec3b>(rows/2,i)=cv::Vec3b(0,0,255);
     }
+    imshow("result",image);
+    cv::waitKey(0);
     imwrite("result.jpg",image);
 
     return 0;
